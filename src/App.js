@@ -82,174 +82,151 @@ const { login } = useAuth();
     nav("/"); // or back to landing
   };
 
-  // Pattern A: API returns { token, user: { id, username } }
+  // ------------------ LOGIN ------------------
   const handleLogin = async ({ username, password }) => {
-  try {
-    setError(""); 
-    setLoading(true);
+    try {
+      setError(""); setLoading(true);
 
-    // 1) Login
-    const res = await fetch("http://localhost:8080/api/v1/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include", // important if server sets HttpOnly cookie
-      body: JSON.stringify({ username, password }),
-    });
-
-    if (!res.ok) {
-      const errTxt = await safeText(res);
-      throw new Error(errTxt || `Login failed (${res.status})`);
-    }
-
-    const data = await safeJson(res); // may be {} if server uses cookie-only auth
-    // Try common shapes
-    let userId =
-      data?.user?.id ??
-      data?.userId ??
-      data?.id ??
-      data?.accountId ??
-      data?.principal?.id ??
-      null;
-
-      console.log("res : ", data)
-
-    let token = data?.token ?? data?.accessToken ?? null;
-
-    // 2) If we got a token but still no userId, try decoding JWT "sub"
-    if (!userId && token) {
-      try {
-        const [, payloadB64] = token.split(".");
-        const payload = JSON.parse(atob(payloadB64));
-        userId = payload?.sub || payload?.user_id || null;
-      } catch {}
-    }
-
-    // 3) If still no userId, call /me using cookie session
-    if (!userId) {
-      const meRes = await fetch("http://localhost:8080/api/v1/auth/me", {
-        method: "GET",
+      // 1) Login
+      const res = await fetch("http://localhost:8080/api/v1/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
-        headers: { "Accept": "application/json" },
+        body: JSON.stringify({ username, password }),
       });
-      if (meRes.ok) {
-        const me = await meRes.json();
-        userId = me?.id ?? me?.userId ?? me?.user?.id ?? null;
-        // If your /me also returns a bearer token, pick it up:
-        token = token || me?.token || me?.accessToken || null;
+
+      if (!res.ok) {
+        const errTxt = await safeText(res);
+        throw new Error(errTxt || `Login failed (${res.status})`);
       }
+
+      const data = await safeJson(res);
+      // Prefer explicit fields from backend
+      let token         = data?.accessToken ?? data?.token ?? null;
+      let userId        = data?.userId ?? data?.user?.id ?? data?.id ?? null;
+      let apiUsername   = data?.username ?? data?.user?.username ?? username;
+      let accountNumber = data?.accountNumber ?? null;
+
+      console.log(data)
+
+      // If token but no userId, decode JWT (sub)
+      if (!userId && token) {
+        try {
+          const [, payloadB64] = token.split(".");
+          const payload = JSON.parse(atob(payloadB64));
+          userId = payload?.sub || payload?.user_id || null;
+        } catch {}
+      }
+
+      // If still no userId, try /me
+      if (!userId) {
+        const meRes = await fetch("http://localhost:8080/api/v1/auth/me", {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Accept": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        });
+        if (meRes.ok) {
+          const me = await meRes.json();
+          userId = me?.id ?? me?.userId ?? me?.user?.id ?? null;
+          apiUsername = me?.username ?? apiUsername;
+          token = token || me?.accessToken || me?.token || null;
+        }
+      }
+
+      if (!userId) throw new Error("User id missing in response.");
+
+      // Fetch accountNumber if missing
+      // if (!accountNumber) {
+      //   accountNumber = await fetchPrimaryAccountNumber(token);
+      // }
+
+      accountNumber = await fetchPrimaryAccountNumber(token);
+      // 2) Persist in auth context
+      login({ userId, token, username: apiUsername, accountNumber });
+
+      // 3) Navigate
+      nav("/dashboard");
+    } catch (e) {
+      setError(e.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    if (!userId) {
-      // Helpful debug for development:
-      console.warn("Login response had no user id:", data);
-      throw new Error("User id missing in response.");
-    }
+  // ------------------ SIGNUP ------------------
+  const handleSignup = async ({ username, fullName, email, phone, password }) => {
+    try {
+      setError(""); setLoading(true);
 
-    // 4) Persist auth locally
-    login({
-      userId,
-      token,
-      username: data?.user?.username ?? username,
-    });
-
-    nav("/dashboard");
-  } catch (e) {
-    setError(e.message || "Login failed");
-  } finally {
-    setLoading(false);
-  }
-};
-
-// helpers
-async function safeText(res) {
-  try { return await res.text(); } catch { return ""; }
-}
-async function safeJson(res) {
-  try { return await res.json(); } catch { return {}; }
-}
-
-
- const handleSignup = async ({ username, fullName, email, phone, password }) => {
-  try {
-    setError("");
-    setLoading(true);
-
-    // 1) Create account
-    const res = await fetch("http://localhost:8080/api/v1/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include", // keep cookies if server sets HttpOnly session
-      body: JSON.stringify({ username, fullName, email, phone, password }),
-    });
-
-    if (!res.ok) {
-      const errTxt = await safeText(res);
-      throw new Error(errTxt || `Signup failed (${res.status})`);
-    }
-
-    const data = await safeJson(res); // may be {} if cookie-only
-    // Try common shapes
-    let userId =
-      data?.user?.id ??
-      data?.userId ??
-      data?.id ??
-      data?.accountId ??
-      data?.principal?.id ??
-      null;
-
-    let token = data?.token ?? data?.accessToken ?? null;
-
-    // 2) If token but no userId, try decoding JWT (sub / user_id)
-    if (!userId && token) {
-      try {
-        const [, payloadB64] = token.split(".");
-        const payload = JSON.parse(atob(payloadB64));
-        userId = payload?.sub || payload?.user_id || null;
-      } catch {}
-    }
-
-    // 3) If still no userId, fetch /me using the cookie session
-    if (!userId) {
-      const meRes = await fetch("http://localhost:8080/api/v1/auth/me", {
-        method: "GET",
+      // 1) Create account
+      const res = await fetch("http://localhost:8080/api/v1/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
-        headers: { Accept: "application/json" },
+        body: JSON.stringify({ username, fullName, email, phone, password }),
       });
-      if (meRes.ok) {
-        const me = await meRes.json();
-        userId = me?.id ?? me?.userId ?? me?.user?.id ?? null;
-        token = token || me?.token || me?.accessToken || null;
+
+      if (!res.ok) {
+        const errTxt = await safeText(res);
+        throw new Error(errTxt || `Signup failed (${res.status})`);
       }
+
+      const data = await safeJson(res);
+      let token         = data?.accessToken ?? data?.token ?? null;
+      let userId        = data?.userId ?? data?.user?.id ?? data?.id ?? null;
+      let apiUsername   = data?.username ?? data?.user?.username ?? username;
+      let accountNumber = data?.accountNumber ?? null;
+
+      console.log(data)
+
+      // If token but no userId, decode JWT (sub)
+      if (!userId && token) {
+        try {
+          const [, payloadB64] = token.split(".");
+          const payload = JSON.parse(atob(payloadB64));
+          userId = payload?.sub || payload?.user_id || null;
+        } catch {}
+      }
+
+      // If still no userId, try /me
+      if (!userId) {
+        const meRes = await fetch("http://localhost:8080/api/v1/auth/me", {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Accept": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        });
+        if (meRes.ok) {
+          const me = await meRes.json();
+          userId = me?.id ?? me?.userId ?? me?.user?.id ?? null;
+          apiUsername = me?.username ?? apiUsername;
+          token = token || me?.accessToken || me?.token || null;
+        }
+      }
+
+      if (!userId) throw new Error("User id missing in response.");
+
+      // Fetch accountNumber if missing
+      if (!accountNumber) {
+        accountNumber = await fetchPrimaryAccountNumber(token);
+      }
+
+      // 2) Persist
+      login({ userId, token, username: apiUsername, accountNumber });
+
+      // 3) Navigate
+      nav("/dashboard");
+    } catch (e) {
+      setError(e.message || "Signup failed");
+    } finally {
+      setLoading(false);
     }
-
-    if (!userId) {
-      console.warn("Signup response had no user id:", data);
-      throw new Error("User id missing in response.");
-    }
-
-    // 4) Persist in your auth context/store
-    login({
-      userId,
-      token,
-      username: data?.user?.username ?? username,
-    });
-
-    nav("/dashboard");
-  } catch (e) {
-    setError(e.message || "Signup failed");
-  } finally {
-    setLoading(false);
-  }
-};
-
-// Helpers (add once in this file if not already present)
-async function safeText(res) {
-  try { return await res.text(); } catch { return ""; }
-}
-async function safeJson(res) {
-  try { return await res.json(); } catch { return {}; }
-}
-
+  };
 
   return (
     <AuthModal
@@ -263,4 +240,28 @@ async function safeJson(res) {
       error={error}
     />
   );
+}
+
+async function safeText(res) { try { return await res.text(); } catch { return ""; } }
+async function safeJson(res) { try { return await res.json(); } catch { return {}; } }
+
+// Try to fetch a primary accountNumber if API didn't include it in auth response
+async function fetchPrimaryAccountNumber(token) {
+  try {
+    const res = await fetch("http://localhost:8080/api/v1/accounts", {
+      method: "GET",
+      credentials: "include",
+      headers: {
+        "Accept": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
+    if (!res.ok) return null;
+    const accounts = await res.json(); // expect [{ accountNumber: "...", ... }]
+    console.log(accounts)
+    if (Array.isArray(accounts) && accounts.length > 0) {
+      return accounts[0]?.accountNumber ?? null;
+    }
+  } catch {}
+  return null;
 }

@@ -11,6 +11,7 @@
   --brand-2: #5b8cff; /* blue for gradient */
   --radius: 18px;
   --shadow: 0 10px 30px rgba(0,0,0,.35);
+   --base-width: 4.3vw;
 }
 
 * { box-sizing: border-box; }
@@ -95,10 +96,84 @@ a { color: inherit; text-decoration: none; }
 
 .order{ padding:18px; display:flex; flex-direction:column; gap:14px; }
 .order__tabs{ display:flex; gap:10px; }
+.order__tabs2{ display:flex; gap:3vw; justify-content: space-around;}
 .field{ display:flex; flex-direction:column; gap:8px; font-size:14px; color:var(--muted); }
 .field input{
   height:42px; border-radius:12px; border:1px solid rgba(255,255,255,.08);
   background:#0f0d1d; color:#fff; padding:0 12px;
+}
+
+.field-primary{ display:flex; justify-content: center; 
+               /* margin-left: calc(var(--base-width) * 1.5); */
+               align-items: center; gap:8px;  width: 155px;
+               font-size:12px; color:var(--muted); }
+.field-primary span{
+    width: 60px;
+}
+.field-primary input{
+  height:30px; border-radius:12px; border:1px solid rgba(255,255,255,.08);
+  background:#0f0d1d; color:#fff; padding:0 12px; width: 85px; 
+  justify-content: center;  
+}
+
+.field-primary2{ display:flex; justify-content: center; 
+               /* margin-left: calc(var(--base-width) * 1.5); */
+               align-items: center; gap:8px;  width: 155px;
+               font-size:12px; color:var(--muted); }
+.field-primary2 span{
+    width: 60px;
+}
+.field-primary2 input{
+  height:30px; border-radius:12px; border:1px solid rgba(255,255,255,.08);
+  background:#0f0d1d; color:#fff; padding:0 12px; width: 85px; 
+  justify-content: center;     text-align: center;  
+}
+
+.field-primary3{ display:flex; justify-content: end; margin-right: 0.6vw;
+               /* margin-left: calc(var(--base-width) * 1.5); */
+               align-items: center; gap:8px; width: 155px;
+               font-size:12px; color:var(--muted); }
+
+.field-primary-select {
+    /* Dimensions and Border match input */
+    height: 30px; 
+    width: 75px; /* Match input width */
+    border-radius: 12px; 
+    border: 1px solid rgba(255, 255, 255, .08);
+
+
+    /* Background and Text match input */
+    background: #0f0d1d; 
+    color: #fff; 
+    
+    /* Padding/Text Alignment */
+    /* padding: 0 8px; Slightly less horizontal padding for the dropdown arrow */
+    font-size: 12px;
+    text-align: center;
+    
+    /* Remove default system appearance */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    
+  
+    
+    /* Optional: Add a custom dropdown icon (using an SVG or icon font) 
+       This makes the background slightly more complex. */
+    /* background-image: url('data:image/svg+xml;utf8,<svg ...>'); 
+       background-position: right 8px center;
+       background-repeat: no-repeat;
+       background-size: 12px; */
+}
+
+.field-primary-select option {
+    background: #0f0d1d; /* Maintain dark background */
+    color: #fff;        /* Maintain white text */
+    padding: 0 12px;  /* Add vertical spacing */
+}
+.field-primary-select:focus {
+    outline: none; /* Remove default outline */
+    border-color: var(--accent-color, #1e90ff); /* Use a subtle accent color on focus */
 }
 
 /* MAIN ROW */

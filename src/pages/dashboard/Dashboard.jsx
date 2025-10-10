@@ -221,7 +221,6 @@
 //   );
 // }
 
-
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import "./dash-board.css";
 import Icon from "../../icons/icon";
@@ -231,7 +230,9 @@ import { useAuth } from "../auth/authContext.jsx";
 
 
 export default function Dashboard() {
-    const { userId , token} = useAuth()
+    // DESTRUCTURING CHANGE: Get safeFetch along with the user details
+    const { userId , accountNumber, safeFetch } = useAuth() 
+    
   // ---- Top 20 symbols (replace with your API) ----
   const [tops, setTops] = useState(() => [
     "AAPL","MSFT","NVDA","GOOGL","AMZN",
@@ -242,6 +243,7 @@ export default function Dashboard() {
 
   const [selected, setSelected] = useState("AAPL");
   const [tf, setTf] = useState("1Y");
+  const [chooseSymbol, setChooseSymbol] = useState("")
 
   // rotation timer state
   const [pausedUntil, setPausedUntil] = useState(0);
@@ -264,6 +266,7 @@ export default function Dashboard() {
   // Clicking a row or the chart selects the symbol + pauses rotation
   const handlePickSymbol = (sym) => {
     setSelected(sym);
+    setChooseSymbol(sym)
     pause();
     orderRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   };
@@ -333,19 +336,15 @@ export default function Dashboard() {
             </div>
 
             {/* Replace static order form with real OrderTicket */}
-            <div className="card order" ref={orderRef}>
-              <div className="card__title">Quick Order</div>
-              <div style={{ padding: "12px 14px 16px" }}>
                 <OrderTicket
-                    defaultSymbol={selected}
+                    defaultSymbol={chooseSymbol}
                     submitUrl="http://localhost:8080/api/v1/orders"
                     userId={userId}
-                    authToken={token}
+                    accountNumber={accountNumber}
+                    fetchApi={safeFetch} // <-- PASS safeFetch HERE
                     onSuccess={(resp) => console.log("order ok", resp)}
                     onError={(msg) => console.error("order error", msg)}
                     />
-              </div>
-            </div>
           </section>
 
           {/* Chart + Right rail */}
@@ -396,13 +395,13 @@ export default function Dashboard() {
               </div>
 
               {/* Current quote pill in corner */}
-              <div className="quote-pill">
+              {/* <div className="quote-pill">
                 <span className="s">{selected}</span>
                 <span className="p">${lastQuote.price}</span>
                 <span className={`d ${Number(lastQuote.pct) >= 0 ? "up":"down"}`}>
                   {Number(lastQuote.pct) >= 0 ? "+" : ""}{lastQuote.pct}%
                 </span>
-              </div>
+              </div> */}
             </div>
 
             {/* Right rail */}
@@ -418,7 +417,7 @@ export default function Dashboard() {
                       <li
                         key={sym}
                         className={`row row--clickable ${isActive ? "is-active":""}`}
-                        onClick={() => handlePickSymbol(sym)}
+                        onClick={() => handlePickSymbol(sym) }
                         title={`Select ${sym}`}
                       >
                         <span className="t">{sym}</span>
