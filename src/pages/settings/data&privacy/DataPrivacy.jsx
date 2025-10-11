@@ -59,12 +59,12 @@ export default function DataPrivacy() {
         <div className="sb-title">Settings</div>
         <nav className="sb-list">
           <Link to="/settings/profile">Account</Link>
-          <Link to="/security">Security</Link>
-          <Link to="/notifications">Notifications</Link>
-          <Link to="/billing">Billing & Subscription</Link>
-          <Link to="/apikeys">API Keys</Link>
-          <Link to="/connections">Connected Accounts</Link>
-          <Link to="/data" className="is-active">Data & Privacy</Link>
+          <Link to="/settings/security">Security</Link>
+          <Link to="/settings/notifications">Notifications</Link>
+          <Link to="/settings/billing">Billing & Subscription</Link>
+          <Link to="/settings/api-keys">API Keys</Link>
+          <Link to="/settings/connected-accounts">Connected Accounts</Link>
+          <Link to="/settings/data-privacy" className="is-active">Data & Privacy</Link>
         </nav>
 
         <div className="sb-legal">

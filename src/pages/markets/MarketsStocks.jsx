@@ -23,7 +23,7 @@ export default function Markets() {
           <NavItem to="/research" label="Research" icon="search" />
           <NavItem to="/strategies" label="Strategies" icon="tag" />
           <NavItem to="/news" label="News" icon="mail" />
-          <NavItem to="/settings" label="Settings" icon="settings" />
+          <NavItem to="/settings/profile" label="Settings" icon="settings" />
         </nav>
       </aside>
 

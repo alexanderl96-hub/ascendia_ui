@@ -19,6 +19,10 @@ import Settings from "./pages/settings/Settings.jsx";
 import Security from "./pages/settings/security/Security.jsx";
 import Notifications from "./pages/settings/notifications/Notifications.jsx";
 import DataPrivacy from "./pages/settings/data&privacy/DataPrivacy.jsx";
+import DangerZone from "./pages/settings/danger_zone/Danger_Zone.jsx";
+import ConnectedAccounts from "./pages/settings/connected_accounts/ConnectedAccounts.jsx";
+import BillingSubscription from "./pages/settings/billing&subscription/BillingSubscription.jsx";
+import ApiKeys from "./pages/settings/apikeys/ApiKeys.jsx";
 
 export default function App() {
   const navigate = useNavigate();
@@ -67,7 +71,11 @@ export default function App() {
       <Route path="/settings/profile" element={<Settings />} />
       <Route path="/settings/security" element={<Security />} /> 
       <Route path="/settings/notifications" element={<Notifications />} />
-      <Route path="/settings/data-privacy" element={<DataPrivacy />} />
+      <Route path="/settings/data-privacy" element={<DataPrivacy />} /> 
+      <Route path="/settings/danger-zone" element={<DangerZone />} />
+      <Route path="/settings/connected-accounts" element={<ConnectedAccounts />} />
+      <Route path="/settings/billing" element={<BillingSubscription />} />
+      <Route path="/settings/api-keys" element={<ApiKeys />} />
       {/* add more routes as needed */}
     </Routes>
   );

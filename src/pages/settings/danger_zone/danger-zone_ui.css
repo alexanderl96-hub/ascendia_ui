@@ -1,0 +1,71 @@
+:root{
+  --bg:#0f0b1b;
+  --panel:#1a1436;
+  --panel2:#201946;
+  --line:#2b2350;
+  --text:#efeaff;
+  --muted:#bdb5de;
+  --danger:#e0536e;
+  --danger2:#ff7b9a;
+  --ghost:#241c4c;
+  --shadow: 0 10px 28px rgba(0,0,0,.35);
+}
+
+.dz-shell{
+  min-height:100vh;
+  padding:28px;
+  background:
+    radial-gradient(900px 520px at 70% -10%, #261c55 0%, transparent 60%),
+    var(--bg);
+  color:var(--text);
+}
+
+.dz-title{ font-size:32px; margin:0 0 18px; }
+
+.dz-card{
+  display:flex; align-items:center; gap:16px;
+  background:linear-gradient(180deg, var(--panel), #161138);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:16px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
+}
+
+.dz-card__icon{
+  width:46px; height:46px; border-radius:12px;
+  background:var(--panel2); display:grid; place-items:center; font-size:22px;
+}
+.dz-card__text .k{ font-weight:700; margin-bottom:4px; }
+.dz-card__text .s{ color:var(--muted); }
+
+.btn{
+  margin-left:auto;
+  padding:10px 14px; border-radius:12px; border:1px solid transparent;
+  background:var(--ghost); color:var(--text); cursor:pointer;
+}
+.btn--ghost{ border-color:var(--line); }
+.btn--danger{
+  background:linear-gradient(180deg, var(--danger2), var(--danger));
+  color:#fff;
+}
+
+/* Modal */
+.dz-overlay{
+  position:fixed; inset:0; background:rgba(10,6,22,.6);
+  display:grid; place-items:center; z-index:40;
+}
+.dz-modal{
+  width:min(520px, calc(100% - 32px));
+  background:linear-gradient(180deg, #1b1540, #151136);
+  border:1px solid var(--line); border-radius:16px; padding:18px;
+  box-shadow:var(--shadow);
+}
+.dz-modal__icon{
+  width:54px; height:54px; border-radius:14px; margin-bottom:8px;
+  display:grid; place-items:center; font-size:26px; color:#ffd4dc;
+  background:rgba(224,83,110,.18); border:1px solid rgba(224,83,110,.35);
+}
+.dz-modal h3{ margin:0 0 6px; }
+.dz-modal__body{ color:var(--muted); margin:0 0 12px; }
+.dz-modal__actions{ display:flex; justify-content:flex-end; gap:10px; }

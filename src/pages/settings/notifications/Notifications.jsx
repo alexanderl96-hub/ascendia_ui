@@ -101,7 +101,7 @@ export default function Notifications() {
           <Link to="/research">Research</Link>
           <Link to="/news">News</Link>
           <Link to="/strategies">Strategies</Link>
-          <Link to="/settings" className="is-active">Settings</Link>
+          <Link to="/settings/profile" className="is-active">Settings</Link>
         </nav>
       </aside>
 

@@ -62,16 +62,16 @@ export default function Settings() {
           <NavLink to="/settings/billing" className="st-link">
             <span className="ico bill" /> Billing & Subscription
           </NavLink>
-          <NavLink to="/settings/api" className="st-link">
+          <NavLink to="/settings/api-keys" className="st-link">
             <span className="ico key" /> API Keys
           </NavLink>
-          <NavLink to="/settings/accounts" className="st-link">
+          <NavLink to="/settings/connected-accounts" className="st-link">
             <span className="ico link" /> Connected Accounts
           </NavLink>
-          <NavLink to="/settings/privacy" className="st-link">
+          <NavLink to="/settings/data-privacy" className="st-link">
             <span className="ico lock" /> Data & Privacy
           </NavLink>
-          <NavLink to="/settings/danger" className="st-link danger">
+          <NavLink to="/settings/danger-zone" className="st-link danger">
             <span className="ico danger" /> Danger Zone
           </NavLink>
         </nav>

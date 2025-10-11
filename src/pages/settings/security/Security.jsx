@@ -57,9 +57,9 @@ export default function Security() {
   };
   const deleteAccount = () => {
     // TODO: destructive action with confirmation
-    if (confirm("Delete your account? This cannot be undone.")) {
-      alert("Account deleted (mock)");
-    }
+    // if (confirm("Delete your account? This cannot be undone.")) {
+    //   alert("Account deleted (mock)");
+    // }
   };
 
   return (
@@ -72,9 +72,9 @@ export default function Security() {
         </div>
 
         <nav className="tabs" role="tablist" aria-label="Settings sections">
-          <Link to="/settings" className="tab">Profile</Link>
-          <Link to="/security" className="tab is-active">Security</Link>
-          <Link to="/billing" className="tab">Billing</Link>
+          <Link to="/settings/profile" className="tab">Profile</Link>
+          <Link to="/settings/security" className="tab is-active">Security</Link>
+          <Link to="/settings/billing" className="tab">Billing</Link>
         </nav>
       </header>
 

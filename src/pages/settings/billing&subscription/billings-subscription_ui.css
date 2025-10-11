@@ -1,0 +1,117 @@
+:root{
+  --bg:#0e0a1a;
+  --pane:#171335;
+  --pane2:#1d1841;
+  --line:#2a2350;
+  --text:#f0eaff;
+  --muted:#bdb6de;
+  --primary1:#7b5dff;
+  --primary2:#5b3cff;
+  --accent:#8a6bff;
+  --ok:#65f2b1;
+  --shadow:0 10px 26px rgba(0,0,0,.35);
+}
+
+.bill-shell{
+  min-height:100vh;
+  padding:26px;
+  color:var(--text);
+  background:
+    radial-gradient(900px 520px at 70% -10%, #261c55 0%, transparent 60%),
+    var(--bg);
+}
+
+.bill-head h1{ margin:0 0 18px; font-size:32px; }
+
+.bill-grid{
+  display:grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-areas:
+    "plan pay"
+    "hist hist";
+  gap:16px;
+}
+.card{
+  background:linear-gradient(180deg, var(--pane2), var(--pane));
+  border:1px solid var(--line);
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  padding:16px;
+}
+.card__title{ font-weight:700; margin-bottom:10px; }
+.plan{ grid-area:plan; }
+.pay{ grid-area:pay; }
+.history{ grid-area:hist; }
+
+.btn{
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid transparent;
+  color:var(--text);
+  cursor:pointer;
+}
+.btn--primary{
+  background:linear-gradient(180deg, var(--primary1), var(--primary2));
+}
+.btn--ghost{
+  background:#241d4b;
+  border-color:var(--line);
+}
+
+.link{
+  background:transparent;
+  border:0;
+  color:#b79cff;
+  cursor:pointer;
+  text-decoration:underline;
+}
+
+.plan__row{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; margin-bottom:8px;
+}
+.plan__name{ font-size:28px; font-weight:800; }
+.plan__price{ font-size:18px; opacity:.9; }
+.plan__price span{ color:var(--muted); font-size:14px; margin-left:4px; }
+
+.plan__features{ margin:10px 0 0; padding-left:0; list-style:none; columns:2; gap:18px; }
+.plan__features li{ break-inside:avoid; padding:6px 0; color:#dcd4ff; display:flex; align-items:center; gap:8px; }
+.dot{ width:8px; height:8px; border-radius:50%; display:inline-block; }
+.dot--accent{ background:var(--accent); }
+
+.pill{
+  display:inline-flex; gap:8px; align-items:center;
+  background:#261f54; border:1px solid var(--line);
+  padding:10px 12px; border-radius:12px; font-weight:600;
+}
+.pill__brand{
+  padding:4px 8px; background:#342a6c; border-radius:8px; opacity:.95;
+}
+
+.pay__row{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.pay__meta{ margin-top:8px; color:var(--muted); font-size:13px; }
+
+.table-wrap{ overflow:auto; }
+.table{
+  width:100%; border-collapse:collapse; font-size:14px;
+}
+.table th, .table td{
+  text-align:left; padding:12px 10px; border-top:1px dashed var(--line);
+}
+.table thead th{ border-top:0; color:var(--muted); font-weight:600; }
+.mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+
+.badge{
+  padding:3px 8px; border-radius:999px; background:#3c345f; color:#ded6ff; font-size:12px;
+}
+.badge.ok{ background:#214c3c; color:var(--ok); }
+
+@media (max-width: 980px){
+  .bill-grid{
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "plan"
+      "pay"
+      "hist";
+  }
+}
