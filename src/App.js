@@ -9,7 +9,16 @@ import LandingHero from "./pages/landingHero/LandingHero.jsx";
 import AuthModal from "./pages/auth/AuthModal.jsx";
 import Dashboard from "./pages/dashboard/Dashboard.jsx";
 import Markets from "./pages/markets/MarketsStocks.jsx";
-
+import Portfolio from "./pages/portfolio/Portfolio.jsx";
+import Watchlists from "./pages/watchlists/Watchlists.jsx";
+import Orders from "./pages/orders/Orders.jsx";
+import Research from "./pages/research/Research.jsx";
+import Strategies from "./pages/strategies/Strategies.jsx";
+import News from "./pages/news/News.jsx";
+import Settings from "./pages/settings/Settings.jsx";
+import Security from "./pages/settings/security/Security.jsx";
+import Notifications from "./pages/settings/notifications/Notifications.jsx";
+import DataPrivacy from "./pages/settings/data&privacy/DataPrivacy.jsx";
 
 export default function App() {
   const navigate = useNavigate();
@@ -48,14 +57,17 @@ export default function App() {
       <Route path="/" element={<LandingHero />} />
       <Route path="/auth" element={<AuthRoute />} />
       <Route path="/dashboard" element={<Dashboard />} /> 
-      <Route path="/markets" element={<Markets/>} />
-      <Route path="/portfolio" element={<div>Portfolio TODO</div>} />
-      <Route path="/watchlists" element={<div>Watchlists TODO</div>} />
-      <Route path="/orders" element={<div>Orders TODO</div>} />
-      <Route path="/research" element={<div>Research TODO</div>} />
-      <Route path="/strategies" element={<div>Strategies TODO</div>} />
-      <Route path="/news" element={<div>News TODO</div>} />
-      <Route path="/settings" element={<div>Settings TODO</div>} />
+      <Route path="/markets" element={<Markets />} />
+      <Route path="/portfolio" element={<Portfolio />} />
+      <Route path="/watchlists" element={<Watchlists />} />
+      <Route path="/orders" element={<Orders />} />
+      <Route path="/research" element={<Research />} />
+      <Route path="/strategies" element={<Strategies />} />
+      <Route path="/news" element={<News />} />
+      <Route path="/settings/profile" element={<Settings />} />
+      <Route path="/settings/security" element={<Security />} /> 
+      <Route path="/settings/notifications" element={<Notifications />} />
+      <Route path="/settings/data-privacy" element={<DataPrivacy />} />
       {/* add more routes as needed */}
     </Routes>
   );
