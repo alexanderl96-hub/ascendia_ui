@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./settings_ui.css";
+import { useAuth } from "../auth/authContext.jsx";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faNewspaper } from '@fortawesome/free-solid-svg-icons';
+
 
 function Toggle({ checked, onChange, label }) {
   return (
@@ -17,10 +21,13 @@ function Toggle({ checked, onChange, label }) {
 }
 
 export default function Settings() {
+  const { userId , username, accountNumber, safeFetch, buyingPower, equity, portfolioValue } = useAuth() 
+      
+
   // Mock state
   const [profile, setProfile] = useState({
-    handle: "user123",
-    name: "John Doe",
+    handle: username,
+    name: `${username?.split(".")[0] +  " " + username?.split(".")[1] }`,
     email: "johndoe@email.com",
   });
   const [twoFA, setTwoFA] = useState(false);
@@ -41,12 +48,13 @@ export default function Settings() {
   };
 
   return (
-    <div className="st-shell">
-      {/* Sidebar */}
-      <aside className="st-side">
+    <div className="dp-shell"> {/*st-shell */}
+      {/* Sidebar st-side*/}
+      <aside className="dp-sidebar">
         <div className="st-brand">
           <div className="logo">A</div>
-          <div className="name">Ascendia</div>
+          {/* <div className="name">Ascendia</div> */}
+          <div className="name">Settings</div>
         </div>
 
         <nav className="st-nav">
@@ -65,8 +73,8 @@ export default function Settings() {
           <NavLink to="/settings/api-keys" className="st-link">
             <span className="ico key" /> API Keys
           </NavLink>
-          <NavLink to="/settings/connected-accounts" className="st-link">
-            <span className="ico link" /> Connected Accounts
+           <NavLink to="/settings/connected-accounts" className="st-link">
+            <span className="ico shield" /> Connected Accounts
           </NavLink>
           <NavLink to="/settings/data-privacy" className="st-link">
             <span className="ico lock" /> Data & Privacy
@@ -75,6 +83,12 @@ export default function Settings() {
             <span className="ico danger" /> Danger Zone
           </NavLink>
         </nav>
+
+
+          <div className="sb-legal">
+          <a href="#!">Privacy Policy</a>
+          <a href="#!">Terms of Service</a>
+        </div>
       </aside>
 
       {/* Main */}
@@ -92,7 +106,9 @@ export default function Settings() {
           {/* Left column */}
           <section className="card profile">
             <div className="avatar">
-              <div className="face" aria-hidden />
+              <div className="face"  aria-hidden >
+                  <FontAwesomeIcon className="fontIcon" icon={faUser} />
+              </div>
             </div>
 
             <div className="row">

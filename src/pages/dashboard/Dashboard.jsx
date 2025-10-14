@@ -231,7 +231,7 @@ import { useAuth } from "../auth/authContext.jsx";
 
 export default function Dashboard() {
     // DESTRUCTURING CHANGE: Get safeFetch along with the user details
-    const { userId , accountNumber, safeFetch } = useAuth() 
+    const { userId , accountNumber, safeFetch, buyingPower, equity, portfolioValue } = useAuth() 
     
   // ---- Top 20 symbols (replace with your API) ----
   const [tops, setTops] = useState(() => [
@@ -280,6 +280,15 @@ export default function Dashboard() {
     return { price, pct };
   }, [selected, tf]);
 
+  function formatNumber(num) {
+  if (num == null || !isFinite(num)) return "";
+  return new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(num);
+}
+
+
   return (
     <div className="dash-shell">
       {/* Topbar */}
@@ -298,7 +307,7 @@ export default function Dashboard() {
           <Link className="topnav__link" to="/research">Research</Link>
           <Link className="topnav__link" to="/strategies">Strategies</Link>
           <Link className="topnav__link" to="/news">News</Link>
-          <Link className="topnav__link" to="/settings">Settings</Link>
+          <Link className="topnav__link" to="/settings/profile">Settings</Link>
         </nav>
 
         <button className="btn btn--upgrade">Upgrade</button>
@@ -324,15 +333,15 @@ export default function Dashboard() {
           <section className="grid kpis">
             <div className="card kpi">
               <div className="kpi__label">Total Equity</div>
-              <div className="kpi__value">$125,430.23</div>
+              <div className="kpi__value">${formatNumber(equity)}</div>
             </div>
             <div className="card kpi kpi--green">
               <div className="kpi__label">Today's P&amp;L</div>
-              <div className="kpi__value">+$931.12</div>
+              <div className="kpi__value">+${formatNumber(931.12)}</div>
             </div>
             <div className="card kpi">
               <div className="kpi__label">Buying Power</div>
-              <div className="kpi__value">$32,145.78</div>
+              <div className="kpi__value">${formatNumber(buyingPower)}</div>
             </div>
 
             {/* Replace static order form with real OrderTicket */}

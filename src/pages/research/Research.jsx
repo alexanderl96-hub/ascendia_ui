@@ -36,7 +36,7 @@ export default function Research() {
             <span className="ico brief" aria-hidden />
             Portfolio
           </Link>
-          <Link className="rs-item" to="/settings">
+          <Link className="rs-item" to="/settings/profile">
             <span className="ico cog" aria-hidden />
             Settings
           </Link>

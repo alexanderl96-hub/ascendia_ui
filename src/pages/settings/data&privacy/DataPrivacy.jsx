@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import "./data-privacy_ui.css";
 
 /* tiny ui atoms */
@@ -56,8 +57,12 @@ export default function DataPrivacy() {
     <div className="dp-shell">
       {/* Sidebar */}
       <aside className="dp-sidebar">
-        <div className="sb-title">Settings</div>
-        <nav className="sb-list">
+        {/* <div className="sb-title">Settings</div> */}
+        <div className="st-brand">
+          <div className="logo">A</div>
+          <div className="name">Settings</div>
+        </div>
+        {/* <nav className="sb-list">
           <Link to="/settings/profile">Account</Link>
           <Link to="/settings/security">Security</Link>
           <Link to="/settings/notifications">Notifications</Link>
@@ -65,7 +70,33 @@ export default function DataPrivacy() {
           <Link to="/settings/api-keys">API Keys</Link>
           <Link to="/settings/connected-accounts">Connected Accounts</Link>
           <Link to="/settings/data-privacy" className="is-active">Data & Privacy</Link>
-        </nav>
+        </nav> */}
+           <nav className="st-nav">
+                    <NavLink to="/settings/profile" className="st-link">
+                      <span className="ico user" /> Profile
+                    </NavLink>
+                    <NavLink to="/settings/security" className="st-link">
+                      <span className="ico shield" /> Security
+                    </NavLink>
+                    <NavLink to="/settings/notifications" className="st-link">
+                      <span className="ico bell" /> Notifications
+                    </NavLink>
+                    <NavLink to="/settings/billing" className="st-link">
+                      <span className="ico bill" /> Billing & Subscription
+                    </NavLink>
+                    <NavLink to="/settings/api-keys" className="st-link">
+                      <span className="ico key" /> API Keys
+                    </NavLink>
+                     <NavLink to="/settings/connected-accounts" className="st-link">
+                      <span className="ico shield" /> Connected Accounts
+                    </NavLink>
+                    <NavLink to="/settings/data-privacy" className="st-link is-active">
+                      <span className="ico lock" /> Data & Privacy
+                    </NavLink>
+                    {/* <NavLink to="/settings/danger-zone" className="st-link danger">
+                      <span className="ico danger" /> Danger Zone
+                    </NavLink> */}
+                  </nav>
 
         <div className="sb-legal">
           <a href="#!">Privacy Policy</a>
@@ -73,8 +104,8 @@ export default function DataPrivacy() {
         </div>
       </aside>
 
-      {/* Main */}
-      <main className="dp-main">
+      {/* Main dp-main */}
+      <main className="dp-main"> 
         <h1 className="dp-title">Data &amp; Privacy</h1>
 
         {/* Data Export */}

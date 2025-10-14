@@ -126,8 +126,14 @@ const { login } = useAuth();
       let userId        = data?.userId ?? data?.user?.id ?? data?.id ?? null;
       let apiUsername   = data?.username ?? data?.user?.username ?? username;
       let accountNumber = data?.accountNumber ?? null;
+      let buyingPower    = data?.alpaca?.buyingPower ?? null;
+      let equity         = data?.alpaca?.equity ?? null;
+      let portfolioValue = data?.alpaca?.portfolioValue ?? null;
 
-      console.log(data)
+      console.log("get data from alpaca" , data.alpaca)
+      console.log("get data from alpaca" , data.alpaca.buyingPower)
+      console.log("get data from alpaca" , data.alpaca.equity)
+      console.log("get data from alpaca" , data.alpaca.portfolioValue)
 
       // If token but no userId, decode JWT (sub)
       if (!userId && token) {
@@ -165,7 +171,8 @@ const { login } = useAuth();
 
       accountNumber = await fetchPrimaryAccountNumber(token);
       // 2) Persist in auth context
-      login({ userId, token, username: apiUsername, accountNumber });
+login({ userId, token, username: apiUsername, accountNumber, 
+  buyingPower, equity, portfolioValue });
 
       // 3) Navigate
       nav("/dashboard");

@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { NavLink } from "react-router-dom";
 import "./billings-subscription_ui.css";
 
 export default function BillingSubscription() {
@@ -43,6 +44,49 @@ export default function BillingSubscription() {
   };
 
   return (
+    <div className="dp-shell"> 
+
+     <aside className="dp-sidebar">
+            <div className="st-brand">
+              <div className="logo">A</div>
+              {/* <div className="name">Ascendia</div> */}
+              <div className="name">Settings</div>
+            </div>
+    
+            <nav className="st-nav">
+              <NavLink to="/settings/profile" className="st-link">
+                <span className="ico user" /> Profile
+              </NavLink>
+              <NavLink to="/settings/security" className="st-link">
+                <span className="ico shield" /> Security
+              </NavLink>
+              <NavLink to="/settings/notifications" className="st-link">
+                <span className="ico bell" /> Notifications
+              </NavLink>
+              <NavLink to="/settings/billing" className="st-link is-active">
+                <span className="ico bill" /> Billing & Subscription
+              </NavLink>
+              <NavLink to="/settings/api-keys" className="st-link">
+                <span className="ico key" /> API Keys
+              </NavLink>
+               <NavLink to="/settings/connected-accounts" className="st-link">
+                <span className="ico shield" /> Connected Accounts
+              </NavLink>
+              <NavLink to="/settings/data-privacy" className="st-link">
+                <span className="ico lock" /> Data & Privacy
+              </NavLink>
+              {/* <NavLink to="/settings/danger-zone" className="st-link danger">
+                <span className="ico danger" /> Danger Zone
+              </NavLink> */}
+            </nav>
+    
+    
+              <div className="sb-legal">
+              <a href="#!">Privacy Policy</a>
+              <a href="#!">Terms of Service</a>
+            </div>
+          </aside>
+
     <div className="bill-shell">
       <header className="bill-head">
         <h1>Billing &amp; Subscription</h1>
@@ -125,6 +169,7 @@ export default function BillingSubscription() {
           </div>
         </section>
       </div>
+    </div>
     </div>
   );
 }

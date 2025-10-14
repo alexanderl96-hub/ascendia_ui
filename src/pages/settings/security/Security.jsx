@@ -63,9 +63,9 @@ export default function Security() {
   };
 
   return (
-    <div className="sc-shell">
+    <div className="dp-shell">
       {/* Top bar */}
-      <header className="sc-top">
+      {/* <header className="sc-top">
         <div className="brand">
           <div className="logo">A</div>
           <div className="name">Ascendia</div>
@@ -76,10 +76,50 @@ export default function Security() {
           <Link to="/settings/security" className="tab is-active">Security</Link>
           <Link to="/settings/billing" className="tab">Billing</Link>
         </nav>
-      </header>
+      </header> */}
 
-      {/* Main card */}
-      <main className="sc-main">
+       <aside className="st-side">
+              <div className="st-brand">
+                <div className="logo">A</div>
+                <div className="name">Settings</div>
+              </div>
+      
+              <nav className="st-nav">
+                <Link to="/settings/profile" className="st-link">
+                  <span className="ico user" /> Profile
+                </Link>
+                <Link to="/settings/security" className="st-link is-active">
+                  <span className="ico shield" /> Security
+                </Link>
+                <Link to="/settings/notifications" className="st-link">
+                  <span className="ico bell" /> Notifications
+                </Link>
+                <Link to="/settings/billing" className="st-link">
+                  <span className="ico bill" /> Billing & Subscription
+                </Link>
+                <Link to="/settings/api-keys" className="st-link">
+                  <span className="ico key" /> API Keys
+                </Link>
+                 <Link to="/settings/connected-accounts" className="st-link">
+                  <span className="ico shield" /> Connected Accounts
+                </Link>
+                <Link to="/settings/data-privacy" className="st-link">
+                  <span className="ico lock" /> Data & Privacy
+                </Link>
+                {/* <Link to="/settings/danger-zone" className="st-link danger">
+                  <span className="ico danger" /> Danger Zone
+                </Link> */}
+              </nav>
+      
+      
+                <div className="sb-legal">
+                <a href="#!">Privacy Policy</a>
+                <a href="#!">Terms of Service</a>
+              </div>
+            </aside>
+
+      {/* Main card sc-main*/}
+      <div className="st-main">
         <section className="sc-card">
           <h1 className="sc-title">Security</h1>
 
@@ -127,7 +167,7 @@ export default function Security() {
             </div>
           </Row>
         </section>
-      </main>
+      </div>
     </div>
   );
 }
