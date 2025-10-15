@@ -241,6 +241,14 @@ export default function Dashboard() {
     // "UNH","V","LLY","XOM","PG","HD","MA","COST","JNJ","ORCL",
   ]);
 
+  const [companies, setCompanies] = useState({
+    "AAPL": "Apple Inc.",
+    "MSFT": "Microsoft Corporation",
+    "NVDA": "NVIDIA Corporation",
+    "GOOGL":  "Alphabet Inc. (Class A)",
+    "AMZN": "Amazon.com, Inc."
+});
+
   const [selected, setSelected] = useState("AAPL");
   const [tf, setTf] = useState("1Y");
   const [chooseSymbol, setChooseSymbol] = useState("")
@@ -365,7 +373,7 @@ export default function Dashboard() {
               title={`Open order ticket for ${selected}`}
             >
               <div className="chartcard__head">
-                <h3>{selected}</h3>
+                <h3>{companies[`${selected}`] + " " } ( {selected} )</h3>
                 <div className="tf" role="tablist" aria-label="Timeframe">
                   {["1D","1W","1M","3M","1Y"].map(t => (
                     <button
@@ -413,26 +421,26 @@ export default function Dashboard() {
               </div> */}
             </div>
 
-            {/* Right rail */}
+            {/* Right rail <Link to="/watchlists">M &rsaquo;</Link> */}
             <div className="rail">
               <div className="card watchlist">
-                <div className="card__title">Top 20 Watchlist <Link to="/watchlists">More &rsaquo;</Link></div>
+                <div className="card__title">Top 20 Live Market</div>
                 <ul className="list">
                   {tops.map((sym) => {
                     const delta = (Math.random()*2*(Math.random()>0.5?1:-1)).toFixed(2) + "%";
                     const price = (100 + Math.random()*900).toFixed(2);
                     const isActive = sym === selected;
                     return (
-                      <li
+                      <div
                         key={sym}
-                        className={`row row--clickable ${isActive ? "is-active":""}`}
+                        className={`rowdash row--clickable ${isActive ? "is-active":""}`}
                         onClick={() => handlePickSymbol(sym) }
                         title={`Select ${sym}`}
                       >
-                        <span className="t">{sym}</span>
-                        <span className={`d ${delta.startsWith("-") ? "down":"up"}`}>{delta}</span>
-                        <span className="p">{price}</span>
-                      </li>
+                        <div className="t">{sym}</div>
+                        <div className={`d ${delta.startsWith("-") ? "down":"up"}`}>{delta}</div>
+                        <div className="p">{price}</div>
+                      </div>
                     );
                   })}
                 </ul>

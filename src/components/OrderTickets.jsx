@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../pages/dashboard/dash-board.css";
+import { useAuth } from "../pages/auth/authContext";
 // Assuming you have components for dropdowns/inputs
 // import { Input, Select, Button } from './ui-components'; 
 
@@ -16,8 +17,9 @@ export default function OrderTicket({
     onSuccess, 
     onError 
 }) {
+    const { publicK, secretK } = useAuth() 
     const [symbol, setSymbol] = useState(defaultSymbol);
-    const [side, setSide] = useState("BUY");
+    const [side, setSide] = useState("");
     const [quantity, setQuantity] = useState(1);
     const [type, setType] = useState("MARKET");
     const [loading, setLoading] = useState(false);
@@ -44,7 +46,9 @@ export default function OrderTicket({
             // limitPrice: type === 'LIMIT' ? limitPrice : null, // Add limitPrice if needed
             // The backend uses the principal ID (userId) and accountNumber, 
             // but we explicitly send the accountNumber for clarity/data integrity
-            accountNumber: accountNumber 
+            accountNumber: accountNumber,
+            alpacaApiKey: publicK,
+            alpacaApiSecret: secretK
         };
 
         try {
@@ -62,6 +66,7 @@ export default function OrderTicket({
                 // If the error is a session expiry handled by safeFetch, 
                 // it might return a specific status/text, but usually, we just 
                 // throw the error to be handled by the component.
+                console.log("error post : ", response.message)
                 const errorData = await response.json().catch(() => ({ message: response.statusText }));
                 throw new Error(errorData.message || `Order failed with status: ${response.status}`);
             }
@@ -72,8 +77,11 @@ export default function OrderTicket({
             // setMessage(`Order for ${payload.symbol} placed successfully!`);
              setTimeout(() => {
                 setSuccessMessage(false); // Revert button back to "Place Order"
+                setMessage(""); // Revert button back to "Place Order"
                 setSymbol("")
+                setSide("")
                 setQuantity(1)
+                setType("MARKET")
                 // You might also clear the form fields here if desired
             }, 3000); 
             
@@ -82,8 +90,10 @@ export default function OrderTicket({
             setMessage(`Error: ${e.message}`);
              setTimeout(() => {
                 setMessage(""); // Revert button back to "Place Order"
-                setSymbol("")
-                setQuantity(1)
+                setSymbol("");
+                setSide("")
+                setQuantity(1);
+                setType("MARKET")
                 // You might also clear the form fields here if desired
             }, 3000); 
         } finally {
@@ -98,12 +108,33 @@ export default function OrderTicket({
 
       return (
             <form onSubmit={handleSubmit} className="card order">
-              <div className="order__tabs">
-                 <button className="chip chip--active" 
-                         onClick={(e) => setType('BUY')} disabled={loading}  >Buy</button>
-                 <button className="chip" 
-                         onClick={(e) => setType("SELL")} disabled={loading}  >Sell</button>
-              </div>
+                <div className="order__tabs">
+                    {/* FIX: Add type="button" to prevent form submission */}
+                    <button
+                        type="button" 
+                        className={`chip ${side === "BUY" ? "chip--active" : ""}`}
+                        onClick={(e) => {
+                            e.preventDefault(); // Good practice, though type="button" handles it
+                            setSide('BUY');
+                        }}
+                        disabled={loading}
+                    >
+                        Buy
+                    </button>
+                    
+                    {/* FIX: Add type="button" to prevent form submission */}
+                    <button
+                        type="button" 
+                        className={`chip ${side === "SELL" ? "chip--active" : ""}`}
+                        onClick={(e) => {
+                            e.preventDefault(); // Good practice, though type="button" handles it
+                            setSide("SELL");
+                        }}
+                        disabled={loading}
+                    >
+                        Sell
+                    </button>
+                </div>
 
                 <div className="order__tabs2">
                     <label className="field-primary2">
@@ -111,7 +142,7 @@ export default function OrderTicket({
                         <input type="text" min="GOOGL" placeholder="GOOGL" 
                                value={symbol} 
                                onChange={(e) => setSymbol(e.target.value)} 
-                              //  required 
+                               required 
                               disabled={loading}
                                 />
                     </label>
@@ -121,9 +152,10 @@ export default function OrderTicket({
                         <input type="text" 
                                step="0.01" 
                                style={{
-                                 color: type == "MARKET" ? " #585959ff" : "#f8f3f3ff"}}
-                               placeholder={type}
-                               value={type} 
+                                 color: side == "" ? " #585959ff" : "#f8f3f3ff"}}
+                               placeholder={side == "" ? type : side}
+                               value={side == "" ? type : side} 
+                               required 
                                disabled={loading}  />
                     </label>
                </div>

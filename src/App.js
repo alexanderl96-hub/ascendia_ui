@@ -129,11 +129,11 @@ const { login } = useAuth();
       let buyingPower    = data?.alpaca?.buyingPower ?? null;
       let equity         = data?.alpaca?.equity ?? null;
       let portfolioValue = data?.alpaca?.portfolioValue ?? null;
+      let publicK = data?.alpacaApiKey ?? null;
+      let secretK = data?.alpacaApiSecret ?? null;
 
-      console.log("get data from alpaca" , data.alpaca)
-      console.log("get data from alpaca" , data.alpaca.buyingPower)
-      console.log("get data from alpaca" , data.alpaca.equity)
-      console.log("get data from alpaca" , data.alpaca.portfolioValue)
+
+      console.log("data key : ", data)
 
       // If token but no userId, decode JWT (sub)
       if (!userId && token) {
@@ -172,7 +172,7 @@ const { login } = useAuth();
       accountNumber = await fetchPrimaryAccountNumber(token);
       // 2) Persist in auth context
 login({ userId, token, username: apiUsername, accountNumber, 
-  buyingPower, equity, portfolioValue });
+  buyingPower, equity, portfolioValue, publicK, secretK });
 
       // 3) Navigate
       nav("/dashboard");
@@ -206,6 +206,8 @@ login({ userId, token, username: apiUsername, accountNumber,
       let userId        = data?.userId ?? data?.user?.id ?? data?.id ?? null;
       let apiUsername   = data?.username ?? data?.user?.username ?? username;
       let accountNumber = data?.accountNumber ?? null;
+      let publicK = data?.alpacaApiKey ?? null;
+      let secretK = data?.alpacaApiSecret ?? null;
 
       console.log(data)
 
@@ -244,7 +246,7 @@ login({ userId, token, username: apiUsername, accountNumber,
       }
 
       // 2) Persist
-      login({ userId, token, username: apiUsername, accountNumber });
+      login({ userId, token, username: apiUsername, accountNumber , publicK, secretK});
 
       // 3) Navigate
       nav("/dashboard");

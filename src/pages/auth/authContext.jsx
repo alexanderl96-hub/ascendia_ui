@@ -208,6 +208,8 @@ export const AuthProvider = ({ children }) => {
   const [buyingPower, setBuyingPower] = useState(null);
   const [equity, setEquity] = useState(null);
   const [portfolioValue, setPortfolioValue] = useState(null);
+  const [publicK, setPublicK] = useState(null);
+  const [secretK, setSecretK] = useState(null)
 
   // Initial load from Local Storage
   useEffect(() => {
@@ -223,6 +225,8 @@ export const AuthProvider = ({ children }) => {
         buyingPower,
         equity,
         portfolioValue, // <-- consistent name
+        publicK,
+        secretK
       } = JSON.parse(stored) || {};
 
       setUserId(userId ?? null);
@@ -233,6 +237,8 @@ export const AuthProvider = ({ children }) => {
       setBuyingPower(buyingPower ?? null);
       setEquity(equity ?? null);
       setPortfolioValue(portfolioValue ?? null);
+      setPublicK(publicK ?? null);
+      setSecretK(secretK ?? null);
     } catch (e) {
       console.error("Error loading auth data from storage:", e);
       localStorage.removeItem("ascendia.auth");
@@ -323,6 +329,8 @@ export const AuthProvider = ({ children }) => {
     buyingPower,
     equity,
     portfolioValue, // <-- keep consistent
+    publicK,
+    secretK
   }) => {
     // 1) Update state
     setUserId(userId ?? null);
@@ -333,6 +341,8 @@ export const AuthProvider = ({ children }) => {
     setBuyingPower(buyingPower ?? null);
     setEquity(equity ?? null);
     setPortfolioValue(portfolioValue ?? null);
+    setPublicK(publicK ?? null);
+    setSecretK(secretK ?? null);
 
     // 2) Persist (names consistent with load)
     const next = {
@@ -344,6 +354,8 @@ export const AuthProvider = ({ children }) => {
       buyingPower: buyingPower ?? null,
       equity: equity ?? null,
       portfolioValue: portfolioValue ?? null, // <-- fix
+      publicK: publicK ?? null,
+      secretK: secretK ?? null
     };
     localStorage.setItem("ascendia.auth", JSON.stringify(next));
   };
@@ -357,6 +369,8 @@ export const AuthProvider = ({ children }) => {
     setBuyingPower(null);
     setEquity(null);
     setPortfolioValue(null);
+    setPublicK(null);
+    setSecretK(null);
     localStorage.removeItem("ascendia.auth");
   };
 
@@ -369,6 +383,8 @@ export const AuthProvider = ({ children }) => {
     buyingPower,
     equity,
     portfolioValue, // <-- expose with the same name
+    publicK,
+    secretK,
     login,
     logout,
     safeFetch,

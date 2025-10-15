@@ -207,13 +207,27 @@ a { color: inherit; text-decoration: none; }
   font-weight:600;
 }
 .watchlist{ padding-bottom:6px; }
-.list{ list-style:none; margin:0; padding:8px 12px 14px; display:flex; flex-direction:column; gap:10px; }
-.row{ display:grid; grid-template-columns: 1fr .8fr 1fr; padding:10px 8px; border-radius:10px; background: rgba(255,255,255,.02); }
-.row .t{ font-weight:600; color:#ddd7ff; }
-.row .d{ text-align:center; }
-.row .d.up{ color: var(--green); }
-.row .d.down{ color: var(--red); }
-.row .p{ text-align:right; color:#c6c2dd; }
+.list{
+  margin:0;
+   display:flex; 
+  list-style:none; 
+  flex-direction:column; 
+  padding: 8px 12px 14px; 
+  gap: 10px
+      }
+.rowdash { display: flex; 
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding:10px 8px; 
+      border-radius:10px; 
+      background: rgba(255,255,255,.02);
+       }
+.rowdash .t{ font-weight:600; color:#ddd7ff;}
+.rowdash .d{ text-align:center; }
+.rowdash .d.up{ color: var(--green); }
+.rowdash .d.down{ color: var(--red); }
+.rowdash .p{ text-align:right; color:#c6c2dd; }
 
 .blurb{ padding:16px; }
 .blurb p{ color:var(--muted); margin:12px 16px 18px; }
@@ -263,7 +277,7 @@ a { color: inherit; text-decoration: none; }
 
 /* clickable rows & chart */
 .row--clickable { cursor: pointer; }
-.row.is-active { border-color: rgba(139,92,246,.45); background: rgba(139,92,246,.12); }
+.rowdash.is-active { border-color: rgba(139,92,246,.45); background: rgba(139,92,246,.12); }
 
 /* clickable chart card */
 .chartcard.clickable { cursor: pointer; position: relative; }
