@@ -301,10 +301,11 @@ export default function Dashboard() {
     <div className="dash-shell">
       {/* Topbar */}
       <header className="topbar">
-        <div className="brand">
+        <Link  className="brand" to="/dashboard">
           <div className="brand__logo">A</div>
           <div className="brand__name">Ascendia</div>
-        </div>
+          {/* <Link className="topnav__link" to="/dashboard">Ascendia</Link> */}
+        </Link>
 
         <nav className="topnav" aria-label="Primary">
           <a className="topnav__link is-active" href="#!">Dashboard</a>
@@ -326,12 +327,16 @@ export default function Dashboard() {
         {/* Sidebar */}
         <aside className="sidebar" aria-label="Secondary">
           {[
-            "home","chart","bag","bell","mail","compass",
+            "chart","bag","bell","mail","compass",
             "search","layers","calendar","doc","tag","settings"
           ].map((k) => (
-            <button key={k} className="sidebtn" title={k}>
-              <Icon name={k} />
-            </button>
+            <button key={k} className="sidebtn" aria-label={k}>
+          <Icon name={k} />
+          {/* Visible to screen readers, hidden visually */}
+          <span className="sr-only">{k}</span>
+          {/* Tooltip label shown on hover/focus */}
+          <span className="sidebtn-label" role="tooltip">{k}</span>
+        </button>
           ))}
         </aside>
 

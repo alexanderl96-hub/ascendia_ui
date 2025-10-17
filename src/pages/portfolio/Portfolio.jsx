@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { NavLink, Link } from "react-router-dom";
 import "./portfolio_ui.css";
 
 const TF_OPTS = ["1D", "1W", "1M", "1Y", "ALL"];
@@ -15,6 +16,14 @@ export default function Portfolio() {
     { label: "ETFs",   value: 35, color: "#5b21b6" },
     { label: "Cash",   value: 16, color: "#22d3ee" },
   ];
+
+    const [companies, setCompanies] = useState({
+      "AAPL": "Apple Inc.",
+      "MSFT": "Microsoft Corporation",
+      "NVDA": "NVIDIA Corporation",
+      "GOOGL":  "Alphabet Inc. (Class A)",
+      "AMZN": "Amazon.com, Inc."
+  });
 
   const [tab, setTab] = useState("Deposit");   // Deposit | Withdraw
   const [tf, setTf] = useState("1D");
@@ -39,6 +48,32 @@ export default function Portfolio() {
   ];
 
   return (
+    <div className="mk-app">
+  {/* ===== Sidebar ===== */}
+      <aside className="mk-side" aria-label="Primary navigation">
+        <Link  className="brand" to="/dashboard">
+                  <div className="brand__logo">A</div>
+                  <div className="brand__name">Ascendia</div>
+        </Link>
+
+        <nav className="mk-nav">
+          {/* <NavItem to="/dashboard" label="Home" icon="home" /> */}
+          <NavItem to="/markets" label="Markets" icon="chart" activeExact />
+          <NavItem to="/portfolio" label="Portfolio" icon="bag" />
+          <NavItem to="/watchlists" label="Watchlists" icon="layers" />
+          <NavItem to="/orders" label="Orders" icon="doc" />
+          <NavItem to="/research" label="Research" icon="search" />
+          <NavItem to="/strategies" label="Strategies" icon="tag" />
+          <NavItem to="/news" label="News" icon="mail" />
+          <NavItem to="/settings/profile" label="Settings" icon="settings" />
+        </nav>
+
+        <div className="sb-legal">
+              <a href="#!">Privacy Policy</a>
+              <a href="#!">Terms of Service</a>
+         </div>
+      </aside>
+       
     <div className="pf-shell">
       <div className="pf-grid">
         {/* Left rail */}
@@ -72,14 +107,14 @@ export default function Portfolio() {
 
           <section className="card holdings-mini">
             <div className="card__title">Holdings</div>
-            <ul>
+            <div>
               {holdings.map((h) => (
-                <li key={h.symbol}>
-                  <span>{h.symbol}</span>
-                  <span className="muted">{h.symbol.slice(0,3)}</span>
-                </li>
+                <div key={h.symbol} className="holds-li">
+                  <span>{companies[`${h.symbol}`] + " " }</span>
+                  <span className="muted">{h.symbol}</span>
+                </div>
               ))}
-            </ul>
+            </div>
           </section>
         </aside>
 
@@ -158,6 +193,7 @@ export default function Portfolio() {
         </main>
       </div>
     </div>
+     </div>
   );
 }
 
@@ -231,5 +267,23 @@ function LineArea({ data }) {
       <path d={area} fill="url(#pfGrad)" />
       <path d={path} fill="none" stroke="#a78bfa" strokeWidth="2.5" />
     </svg>
+  );
+}
+
+/* Reusable Nav item */
+function NavItem({ to, label, icon, activeExact }) {
+  return (
+    <NavLink
+      to={to}
+      end={!!activeExact}
+      className={({ isActive }) =>
+        "mk-nav__item" + (isActive ? " is-active" : "")
+      }
+    >
+      {/* If you have Icon.jsx, use <Icon name={icon} />. Otherwise dots show via CSS */}
+      {/* <Icon name={icon} /> */}
+      <span className="mk-nav__dot" aria-hidden="true" />
+      <span className="mk-nav__label">{label}</span>
+    </NavLink>
   );
 }

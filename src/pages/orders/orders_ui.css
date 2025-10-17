@@ -12,9 +12,14 @@
   --err:#ff7b7b;
   --primary:#7b61ff;
 }
+.mk-app{
+  display:grid;
+  grid-template-columns: 250px 1fr; /* sidebar + content */
+  min-height:100vh;
+}
 
 .ord-shell{
-  padding:28px;
+  padding:24px;
   color:var(--text);
   background:radial-gradient(1200px 600px at 70% -20%, #291a56 0%, transparent 60%) , var(--bg);
   min-height:100vh;

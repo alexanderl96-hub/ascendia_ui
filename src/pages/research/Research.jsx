@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import "./research_ui.css";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 export default function Research() {
   const [q, setQ] = useState("");
@@ -15,36 +15,34 @@ export default function Research() {
   }, [q]);
 
   return (
-    <div className="rs-shell">
+      <div className="mk-app">
       {/* Sidebar */}
-      <aside className="rs-side">
-        <div className="rs-logo">A</div>
-        <nav className="rs-nav" aria-label="Primary">
-          <Link className="rs-item is-active" to="/research">
-            <span className="ico grid" aria-hidden />
-            Research
-          </Link>
-          <Link className="rs-item" to="/markets">
-            <span className="ico bars" aria-hidden />
-            Markets
-          </Link>
-          <Link className="rs-item" to="/watchlists">
-            <span className="ico bookmark" aria-hidden />
-            Watchlist
-          </Link>
-          <Link className="rs-item" to="/portfolio">
-            <span className="ico brief" aria-hidden />
-            Portfolio
-          </Link>
-          <Link className="rs-item" to="/settings/profile">
-            <span className="ico cog" aria-hidden />
-            Settings
-          </Link>
-        </nav>
-      </aside>
+        <aside className="mk-side" aria-label="Primary navigation">
+              <Link  className="brand" to="/dashboard">
+                        <div className="brand__logo">A</div>
+                        <div className="brand__name">Ascendia</div>
+              </Link>
+      
+              <nav className="mk-nav">
+                {/* <NavItem to="/dashboard" label="Home" icon="home" /> */}
+                <NavItem to="/markets" label="Markets" icon="chart" activeExact />
+                <NavItem to="/portfolio" label="Portfolio" icon="bag" />
+                <NavItem to="/watchlists" label="Watchlists" icon="layers" />
+                <NavItem to="/orders" label="Orders" icon="doc" />
+                <NavItem to="/research" label="Research" icon="search" />
+                <NavItem to="/strategies" label="Strategies" icon="tag" />
+                <NavItem to="/news" label="News" icon="mail" />
+                <NavItem to="/settings/profile" label="Settings" icon="settings" />
+              </nav>
+
+          <div className="sb-legal">
+              <a href="#!">Privacy Policy</a>
+              <a href="#!">Terms of Service</a>
+         </div>
+            </aside>
 
       {/* Main */}
-      <main className="rs-main">
+      <main className="rs-shell">
         <header className="rs-head">
           <h1>Research</h1>
           <div className="rs-search">
@@ -150,7 +148,7 @@ export default function Research() {
           <div className="card heatmap">
             <div className="card__title">Heatmap</div>
             <div className="heat-grid">
-              {Array.from({length:12}).map((_,i)=>(
+              {Array.from({length:16}).map((_,i)=>(
                 <span key={i} style={{opacity: 0.35 + (i%6)/10}} />
               ))}
             </div>
@@ -204,4 +202,32 @@ const earnings = [
   { date:"Apr 21", co:"XYZ", eps:"$1.25" },
   { date:"Apr 22", co:"ACME", eps:"$0.91" },
   { date:"Apr 23", co:"ORCL", eps:"$1.12" },
+  { date:"Apr 24", co:"GOOG", eps:"$1.89" },
+  { date:"Apr 25", co:"MSFT", eps:"$2.58" },
+  // { date:"Apr 26", co:"TSLA", eps:"$0.45" },
+  // { date:"Apr 27", co:"AMZN", eps:"$0.83" },
+  // { date:"Apr 28", co:"NFLX", eps:"$3.50" },
+  // { date:"Apr 29", co:"JPM", eps:"$4.10" },
+  // { date:"Apr 30", co:"V", eps:"$2.35" },
+  // { date:"May 01", co:"UNH", eps:"$6.80" },
+  // { date:"May 02", co:"HD", eps:"$3.89" },
+  // { date:"May 03", co:"PFE", eps:"$0.55" }
 ];
+
+/* Reusable Nav item */
+function NavItem({ to, label, icon, activeExact }) {
+  return (
+    <NavLink
+      to={to}
+      end={!!activeExact}
+      className={({ isActive }) =>
+        "mk-nav__item" + (isActive ? " is-active" : "")
+      }
+    >
+      {/* If you have Icon.jsx, use <Icon name={icon} />. Otherwise dots show via CSS */}
+      {/* <Icon name={icon} /> */}
+      <span className="mk-nav__dot" aria-hidden="true" />
+      <span className="mk-nav__label">{label}</span>
+    </NavLink>
+  );
+}

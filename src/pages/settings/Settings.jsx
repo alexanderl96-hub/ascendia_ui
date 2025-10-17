@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import "./settings_ui.css";
 import { useAuth } from "../auth/authContext.jsx";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -51,11 +51,10 @@ export default function Settings() {
     <div className="dp-shell"> {/*st-shell */}
       {/* Sidebar st-side*/}
       <aside className="dp-sidebar">
-        <div className="st-brand">
-          <div className="logo">A</div>
-          {/* <div className="name">Ascendia</div> */}
-          <div className="name">Settings</div>
-        </div>
+         <Link  className="brand" to="/dashboard">
+                                <div className="brand__logo">A</div>
+                                <div className="brand__name">Settings</div>
+          </Link>
 
         <nav className="st-nav">
           <NavLink to="/settings/profile" className="st-link is-active">
@@ -94,12 +93,7 @@ export default function Settings() {
       {/* Main */}
       <main className="st-main">
         <header className="st-header">
-          <button className="back" aria-label="Back">
-             <NavLink to="/dashboard" className="st-link danger">
-               <span className="ico danger" />  ←
-            </NavLink>
-          </button>
-          <h2>Settings</h2>
+          <h2>Profile</h2>
         </header>
 
         <form className="st-grid" onSubmit={save}>

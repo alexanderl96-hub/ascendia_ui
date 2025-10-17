@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import "./strategies_ui.css";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 const MOCK = [
   { id:"mom-alpha",    name:"Momentum Alpha",   author:"Alice Johnson",  ret:34.2,  dd:-12.0, sharpe:1.45, fav:true },
@@ -37,15 +37,41 @@ export default function Strategies() {
   const active = useMemo(() => list.find(x => x.id === selected) || list[0] || MOCK[0], [list, selected]);
 
   return (
-    <div className="st-shell">
+   <div className="mk-app">
+      {/* ===== Sidebar ===== */}
+       <aside className="mk-side" aria-label="Primary navigation">
+         <Link  className="brand" to="/dashboard">
+                   <div className="brand__logo">A</div>
+                   <div className="brand__name">Ascendia</div>
+         </Link>
+ 
+         <nav className="mk-nav">
+           {/* <NavItem to="/dashboard" label="Home" icon="home" /> */}
+           <NavItem to="/markets" label="Markets" icon="chart" activeExact />
+           <NavItem to="/portfolio" label="Portfolio" icon="bag" />
+           <NavItem to="/watchlists" label="Watchlists" icon="layers" />
+           <NavItem to="/orders" label="Orders" icon="doc" />
+           <NavItem to="/research" label="Research" icon="search" />
+           <NavItem to="/strategies" label="Strategies" icon="tag" />
+           <NavItem to="/news" label="News" icon="mail" />
+           <NavItem to="/settings/profile" label="Settings" icon="settings" />
+         </nav>
+
+        <div className="sb-legal">
+              <a href="#!">Privacy Policy</a>
+              <a href="#!">Terms of Service</a>
+         </div>
+       </aside>
+
+    <div className="stra-shell">
       {/* Topbar */}
-      <header className="st-top">
+      <header className="stra-top">
         <h1>Strategies</h1>
-        <nav className="st-tabs" role="tablist" aria-label="Mode">
+        <nav className="stra-tabs" role="tablist" aria-label="Mode">
           <button
             role="tab"
             aria-selected={tab==="mine"}
-            className={`st-tab ${tab==="mine"?"is-active":""}`}
+            className={`stra-tab ${tab==="mine"?"is-active":""}`}
             onClick={()=>setTab("mine")}
           >
             Mine
@@ -53,13 +79,13 @@ export default function Strategies() {
           <button
             role="tab"
             aria-selected={tab==="marketplace"}
-            className={`st-tab ${tab==="marketplace"?"is-active":""}`}
+            className={`stra-tab ${tab==="marketplace"?"is-active":""}`}
             onClick={()=>setTab("marketplace")}
           >
             Marketplace
           </button>
         </nav>
-        <div className="st-search">
+        <div className="stra-search">
           <span className="ico search" aria-hidden />
           <input
             placeholder="Search"
@@ -68,15 +94,15 @@ export default function Strategies() {
             aria-label="Search strategies"
           />
         </div>
-        <div className="st-actions">
+        <div className="stra-actions">
           <button className="icon-btn" title="Help"><span className="ico dot" /></button>
           <button className="icon-btn" title="Account"><span className="ico avatar" /></button>
         </div>
       </header>
 
-      <div className="st-layout">
+      <div className="stra-layout">
         {/* LEFT: Filters */}
-        <aside className="st-filters">
+        <aside className="stra-filters">
           <div className="group">
             <div className="group__title">Performance</div>
             <input type="range" min="0" max="100" value={perf} onChange={e=>setPerf(+e.target.value)} />
@@ -102,7 +128,7 @@ export default function Strategies() {
         </aside>
 
         {/* CENTER: Cards */}
-        <section className="st-list">
+        <section className="stra-list">
           <div className="list-head">
             <h2>Favorites</h2>
             <div className="list-tools">
@@ -145,8 +171,8 @@ export default function Strategies() {
         </section>
 
         {/* RIGHT: Details */}
-        <aside className="st-details" aria-labelledby="st-d-title">
-          <h3 id="st-d-title">{active.name}</h3>
+        <aside className="stra-details" aria-labelledby="stra-d-title">
+          <h3 id="stra-d-title">{active.name}</h3>
           <div className="d-author">
             <span className="ico badge" aria-hidden />
             <span>{active.author}</span>
@@ -172,6 +198,8 @@ export default function Strategies() {
           <button className="btn btn--primary">Buy Strategy</button>
         </aside>
       </div>
+     </div>
+
     </div>
   );
 }
@@ -192,4 +220,24 @@ function Sparkline({ points=28 }) {
 function fmtPct(n) {
   const s = (Math.abs(n)).toFixed(1) + "%";
   return (n>=0 ? s : "−" + s); // using minus glyph for style
+}
+
+
+
+/* Reusable Nav item */
+function NavItem({ to, label, icon, activeExact }) {
+  return (
+    <NavLink
+      to={to}
+      end={!!activeExact}
+      className={({ isActive }) =>
+        "mk-nav__item" + (isActive ? " is-active" : "")
+      }
+    >
+      {/* If you have Icon.jsx, use <Icon name={icon} />. Otherwise dots show via CSS */}
+      {/* <Icon name={icon} /> */}
+      <span className="mk-nav__dot" aria-hidden="true" />
+      <span className="mk-nav__label">{label}</span>
+    </NavLink>
+  );
 }

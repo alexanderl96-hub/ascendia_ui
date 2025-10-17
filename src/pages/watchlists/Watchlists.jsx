@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { NavLink, Link } from "react-router-dom";
 import "./watchlists_ui.css";
 
 const seedRows = [
@@ -81,97 +82,142 @@ export default function Watchlists() {
   };
 
   return (
-    <div className="wl-shell">
-      <header className="wl-head card">
-        <h1 className="wl-title">Watchlists</h1>
+    <div className="mk-app">
+        {/* ===== Sidebar ===== */}
+            <aside className="mk-side" aria-label="Primary navigation">
+              <Link  className="brand" to="/dashboard">
+                        <div className="brand__logo">A</div>
+                        <div className="brand__name">Ascendia</div>
+              </Link>
+      
+              <nav className="mk-nav">
+                {/* <NavItem to="/dashboard" label="Home" icon="home" /> */}
+                <NavItem to="/markets" label="Markets" icon="chart" activeExact />
+                <NavItem to="/portfolio" label="Portfolio" icon="bag" />
+                <NavItem to="/watchlists" label="Watchlists" icon="layers" />
+                <NavItem to="/orders" label="Orders" icon="doc" />
+                <NavItem to="/research" label="Research" icon="search" />
+                <NavItem to="/strategies" label="Strategies" icon="tag" />
+                <NavItem to="/news" label="News" icon="mail" />
+                <NavItem to="/settings/profile" label="Settings" icon="settings" />
+              </nav>
 
-        <div className="wl-actions">
-          <div className="wl-field">
-            <label>List</label>
-            <div className="wl-select">
-              <select value={activeId} onChange={(e)=>setActiveId(e.target.value)}>
-                {lists.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
-              </select>
+        <div className="sb-legal">
+              <a href="#!">Privacy Policy</a>
+              <a href="#!">Terms of Service</a>
+         </div> 
+            </aside>
+             
+      <div className="wl-shell">
+        <header className="wl-head card">
+          <h1 className="wl-title">Watchlists</h1>
+
+          <div className="wl-actions">
+            <div className="wl-field">
+              <label>List</label>
+              <div className="wl-select">
+                <select value={activeId} onChange={(e)=>setActiveId(e.target.value)}>
+                  {lists.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
+                </select>
+              </div>
             </div>
-          </div>
 
-          <div className="wl-field">
-            <label>Sort</label>
-            <div className="wl-select">
-              <select value={sort} onChange={(e)=>setSort(e.target.value)}>
-                <option value="symbol">Symbol</option>
-                <option value="price">Price</option>
-                <option value="change">Change</option>
-                <option value="volume">Volume</option>
-              </select>
+            <div className="wl-field">
+              <label>Sort</label>
+              <div className="wl-select">
+                <select value={sort} onChange={(e)=>setSort(e.target.value)}>
+                  <option value="symbol">Symbol</option>
+                  <option value="price">Price</option>
+                  <option value="change">Change</option>
+                  <option value="volume">Volume</option>
+                </select>
+              </div>
             </div>
-          </div>
 
-          <div className="wl-search">
-            <input
-              placeholder="Search symbols or names"
-              value={query}
-              onChange={(e)=>setQuery(e.target.value)}
-            />
-          </div>
+            <div className="wl-search">
+              <input
+                placeholder="Search symbols or names"
+                value={query}
+                onChange={(e)=>setQuery(e.target.value)}
+              />
+            </div>
 
-          <div className="wl-add">
-            <input
-              placeholder="Add symbol (e.g. AAPL)"
-              value={addSym}
-              onChange={(e)=>setAddSym(e.target.value)}
-              onKeyDown={(e)=> e.key === "Enter" && handleAdd()}
-            />
+            <div className="wl-add">
+              <input
+                placeholder="Add symbol (e.g. AAPL)"
+                value={addSym}
+                onChange={(e)=>setAddSym(e.target.value)}
+                onKeyDown={(e)=> e.key === "Enter" && handleAdd()}
+              />
+             
+            </div>
             <button className="btn btn--primary" onClick={handleAdd}>Add</button>
+            <button className="btn btn--ghost" onClick={makeList}>Create List</button>
           </div>
+        </header>
 
-          <button className="btn btn--ghost" onClick={makeList}>Create List</button>
-        </div>
-      </header>
-
-      <section className="card wl-table-wrap">
-        <table className="wl-table">
-          <thead>
-            <tr>
-              <th>Symbol</th>
-              <th>Name</th>
-              <th className="right">Price</th>
-              <th className="right">Change</th>
-              <th className="right">Volume</th>
-              <th className="right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((r) => {
-              const up = r.change >= 0;
-              return (
-                <tr key={r.sym}>
-                  <td>
-                    <span className={`pill ${up ? "pill--up":"pill--down"}`}>
-                      {r.sym.length > 5 ? r.sym.slice(0,5) + "…" : r.sym}
-                    </span>
-                  </td>
-                  <td className="name">{r.name}</td>
-                  <td className="right">${r.price.toFixed(2)}</td>
-                  <td className={`right ${up ? "up":"down"}`}>
-                    {up ? "+" : ""}{r.change.toFixed(2)}%
-                  </td>
-                  <td className="right">{r.volume}</td>
-                  <td className="right">
-                    <button className="chip">Buy</button>
-                    <button className="chip chip--danger" onClick={()=>handleRemove(r.sym)}>Remove</button>
-                  </td>
-                </tr>
-              );
-            })}
-            {filtered.length === 0 && (
+        <section className="card wl-table-wrap">
+          <table className="wl-table">
+            <thead>
               <tr>
-                <td colSpan={6} className="empty">No results</td>
+                <th >Symbol</th>
+                <th >Name</th>
+                <th className="right">Price</th>
+                <th className="right">Change</th>
+                <th className="right">Volume</th>
+                <th className="right">Actions</th>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </section>
+            </thead>
+            <tbody>
+              {filtered.map((r) => {
+                const up = r.change >= 0;
+                return (
+                  <tr key={r.sym}>
+                    <td>
+                      <span className={`pill ${up ? "pill--up":"pill--down"}`}>
+                        {r.sym.length > 5 ? r.sym.slice(0,5) + "…" : r.sym}
+                      </span>
+                    </td>
+                    <td className="name">{r.name}</td>
+                    <td className="right">${r.price.toFixed(2)}</td>
+                    <td className={`right ${up ? "up":"down"}`}>
+                      {up ? "+" : ""}{r.change.toFixed(2)}%
+                    </td>
+                    <td className="right">{r.volume}</td>
+                    <td className="right">
+                      <button className="chip">Buy</button>
+                      <button className="chip chip--danger" onClick={()=>handleRemove(r.sym)}>Remove</button>
+                    </td>
+                  </tr>
+                );
+              })}
+              {filtered.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="empty">No results</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </section>
+      </div>
     </div>
+  );
+}
+
+/* Reusable Nav item */
+function NavItem({ to, label, icon, activeExact }) {
+  return (
+    <NavLink
+      to={to}
+      end={!!activeExact}
+      className={({ isActive }) =>
+        "mk-nav__item" + (isActive ? " is-active" : "")
+      }
+    >
+      {/* If you have Icon.jsx, use <Icon name={icon} />. Otherwise dots show via CSS */}
+      {/* <Icon name={icon} /> */}
+      <span className="mk-nav__dot" aria-hidden="true" />
+      <span className="mk-nav__label">{label}</span>
+    </NavLink>
   );
 }

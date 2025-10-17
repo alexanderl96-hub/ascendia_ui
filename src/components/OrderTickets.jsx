@@ -43,12 +43,9 @@ export default function OrderTicket({
             side: side,
             type: type,
             quantity: quantity,
-            // limitPrice: type === 'LIMIT' ? limitPrice : null, // Add limitPrice if needed
-            // The backend uses the principal ID (userId) and accountNumber, 
-            // but we explicitly send the accountNumber for clarity/data integrity
             accountNumber: accountNumber,
             alpacaApiKey: publicK,
-            alpacaApiSecret: secretK
+            alpacaApiSecret: secretK,
         };
 
         try {
@@ -61,6 +58,7 @@ export default function OrderTicket({
                 },
                 body: JSON.stringify(payload),
             });
+
 
             if (!response.ok) {
                 // If the error is a session expiry handled by safeFetch, 

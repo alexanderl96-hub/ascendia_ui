@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import "./markets.css"
 // If you added the earlier Icon.jsx, uncomment the next line:
 // import Icon from "../../components/Icon";
@@ -9,13 +9,13 @@ export default function Markets() {
     <div className="mk-app">
       {/* ===== Sidebar ===== */}
       <aside className="mk-side" aria-label="Primary navigation">
-        <div className="mk-brand">
-          <div className="mk-logo">A</div>
-          <span className="mk-brand__name">ASCENDIA</span>
-        </div>
+        <Link  className="brand" to="/dashboard">
+                  <div className="brand__logo">A</div>
+                  <div className="brand__name">Ascendia</div>
+        </Link>
 
         <nav className="mk-nav">
-          <NavItem to="/dashboard" label="Home" icon="home" />
+          {/* <NavItem to="/dashboard" label="Home" icon="home" /> */}
           <NavItem to="/markets" label="Markets" icon="chart" activeExact />
           <NavItem to="/portfolio" label="Portfolio" icon="bag" />
           <NavItem to="/watchlists" label="Watchlists" icon="layers" />
@@ -25,6 +25,11 @@ export default function Markets() {
           <NavItem to="/news" label="News" icon="mail" />
           <NavItem to="/settings/profile" label="Settings" icon="settings" />
         </nav>
+
+         <div className="sb-legal">
+              <a href="#!">Privacy Policy</a>
+              <a href="#!">Terms of Service</a>
+         </div>
       </aside>
 
       {/* ===== Content ===== */}

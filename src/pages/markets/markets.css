@@ -89,7 +89,10 @@ body{
 .mk-nav__label{ font-weight:600; }
 
 /* ---------- Content Shell ---------- */
-.mk-content{ padding:18px 22px 26px; }
+.mk-content{
+   /* padding:18px 22px 26px; */
+     padding:24px;
+}
 
 /* Header row */
 .mk-head{
