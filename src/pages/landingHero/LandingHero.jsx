@@ -16,7 +16,8 @@ export default function LandingHero({setOpen, setPath}) {
         </p>
 
         <div className="hero__cta">
-           <Link className="btn btn--primary" to="/auth?next=/login"  aria-label="Get Started" 
+           <Link className="btn btn--primary" to="/auth?next=/login"  
+                   aria-label="Get Started" 
                 // onClick={()=> setOpen(true)}
                 >
                 Get Started

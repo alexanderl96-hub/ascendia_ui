@@ -227,6 +227,7 @@ import Icon from "../../icons/icon";
 import { Link } from "react-router-dom";
 import OrderTicket from "../../components/OrderTickets.jsx";
 import { useAuth } from "../auth/authContext.jsx";
+import { formatNumber } from "../../helper/helper.jsx";
 
 
 export default function Dashboard() {
@@ -288,14 +289,11 @@ export default function Dashboard() {
     return { price, pct };
   }, [selected, tf]);
 
-  function formatNumber(num) {
-  if (num == null || !isFinite(num)) return "";
-  return new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(num);
-}
+  function pnll( equity, buyingPower) {
+    return +(equity - buyingPower).toFixed(2);
+  }
 
+  const pnlTotal = pnll(portfolioValue, 100000);
 
   return (
     <div className="dash-shell">
@@ -304,7 +302,6 @@ export default function Dashboard() {
         <Link  className="brand" to="/dashboard">
           <div className="brand__logo">A</div>
           <div className="brand__name">Ascendia</div>
-          {/* <Link className="topnav__link" to="/dashboard">Ascendia</Link> */}
         </Link>
 
         <nav className="topnav" aria-label="Primary">
@@ -350,7 +347,7 @@ export default function Dashboard() {
             </div>
             <div className="card kpi kpi--green">
               <div className="kpi__label">Today's P&amp;L</div>
-              <div className="kpi__value">+${formatNumber(931.12)}</div>
+              <div className="kpi__value">+${formatNumber(pnlTotal)}</div>
             </div>
             <div className="card kpi">
               <div className="kpi__label">Buying Power</div>

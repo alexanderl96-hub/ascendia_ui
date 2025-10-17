@@ -136,7 +136,7 @@ export default function Orders() {
 
         {/* Filters */}
         <div className="ord-filters">
-          <div className="field">
+          <div className="fieldOrd">
             <label>Status</label>
             <select value={status} onChange={(e)=>setStatus(e.target.value)}>
               <option value="ALL">All Statuses</option>
@@ -149,7 +149,7 @@ export default function Orders() {
             </select>
           </div>
 
-          <div className="field">
+          <div className="fieldOrd">
             <label>Date range</label>
             <select value={range} onChange={(e)=>setRange(e.target.value)}>
               <option value="1D">Last 1 day</option>

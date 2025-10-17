@@ -1,14 +1,17 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { NavLink, Link } from "react-router-dom";
+import { useAuth } from "../auth/authContext.jsx";
+import {formatNumber} from "../../helper/helper.jsx"
 import "./portfolio_ui.css";
 
 const TF_OPTS = ["1D", "1W", "1M", "1Y", "ALL"];
 
 export default function Portfolio() {
+  const { userId , accountNumber, safeFetch, buyingPower, equity, portfolioValue } = useAuth() 
+      
   // --- mock numbers (replace with API) ---
-  const equity = 12450.25;
-  const pnl = -2187.5; // negative shows red
-  const pnlPct = -14.94;
+  const pnl = `${buyingPower - 100000}`; // negative shows red
+  const [showPercent, setShowPercent] = useState(false);
 
   // allocation in %
   const allocation = [
@@ -42,10 +45,31 @@ export default function Portfolio() {
 
   const holdings = [
     { symbol: "AAPL", qty: 10, price: 170.19, change: -0.88 },
-    { symbol: "AABL", qty: 5,  price: 141.32, change: -1.20 },
+    { symbol: "AMZN", qty: 5,  price: 141.32, change: -1.20 },
     { symbol: "GOOGL",qty: 8,  price: 192.55, change: -2.01 },
     { symbol: "NVDA", qty: 6,  price: 271.70, change: -2.78 },
   ];
+
+  function pnll( equity, buyingPower) {
+    return +(equity - buyingPower).toFixed(2);
+  }
+
+  function percentage(part, total, decimals = 5) {
+  if (!Number.isFinite(part) || !Number.isFinite(total) || total === 0) return null;
+  const pct = (part / total) * 100;
+  return +pct.toFixed(decimals);
+}
+
+
+  // flip every 20s
+  useEffect(() => {
+    const id = setInterval(() => setShowPercent(v => !v), 20000);
+    return () => clearInterval(id);
+  }, []);
+
+  const pnlTotal = pnll(portfolioValue, 100000);
+  const pct = percentage(pnlTotal, portfolioValue);
+
 
   return (
     <div className="mk-app">
@@ -57,7 +81,6 @@ export default function Portfolio() {
         </Link>
 
         <nav className="mk-nav">
-          {/* <NavItem to="/dashboard" label="Home" icon="home" /> */}
           <NavItem to="/markets" label="Markets" icon="chart" activeExact />
           <NavItem to="/portfolio" label="Portfolio" icon="bag" />
           <NavItem to="/watchlists" label="Watchlists" icon="layers" />
@@ -80,14 +103,17 @@ export default function Portfolio() {
         <aside className="pf-left">
           <section className="card kpi">
             <div className="kpi__label">Total Equity</div>
-            <div className="kpi__value">${equity.toLocaleString()}</div>
+            <div className="kpi__value">${formatNumber(equity)}</div>
             <div className={`kpi__delta ${pnl >= 0 ? "up" : "down"}`}>
-              {pnl >= 0 ? "+" : ""}
-              {pnl.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-              {" — "}
-              {pnlPct >= 0 ? "+" : ""}
-              {Math.abs(pnlPct).toFixed(2)}%
+              {/* {pnl >= 0 ? "+" : ""} */}
+              {formatNumber(pnl)}
+              {"\u00A0\u00A0"}
+              {showPercent
+                ? `${pnlTotal >= 0 ? '+' : ''}$${Math.abs(pnlTotal)?.toFixed(2)}`
+                : `${pct >= 0 ? '+' : ''}${pct?.toFixed(2)}%`
+              }
             </div>
+            
           </section>
 
           <section className="card donut">
