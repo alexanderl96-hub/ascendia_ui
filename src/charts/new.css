@@ -1,0 +1,23 @@
+/* Card background (set to dark or transparent to match your theme) */
+.donut-card.dark {
+  background: transparent;          /* or #0b1020 if you want a panel */
+  border: 1px solid transparent;    /* or #1f2a44 */
+  color: #e2e8f0;
+}
+
+/* Center label */
+.donut-center {
+  position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none;
+}
+.donut-center__inner { text-align: center; line-height: 1.1; }
+.donut-center__label { font-size: 12px; opacity: 0.75; }
+.donut-center__value { font-size: 20px; font-weight: 700; }
+
+/* HTML tooltips (requires tooltip.isHtml = true) */
+.google-visualization-tooltip {
+  background: #0b1020 !important;
+  color: #e2e8f0 !important;
+  border: 1px solid #1f2a44 !important;
+  box-shadow: none !important;
+}
+.google-visualization-tooltip span { color: inherit !important; }

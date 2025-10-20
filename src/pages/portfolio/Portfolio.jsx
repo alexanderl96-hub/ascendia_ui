@@ -2,6 +2,8 @@ import React, { useMemo, useState, useEffect } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { useAuth } from "../auth/authContext.jsx";
 import {formatNumber} from "../../helper/helper.jsx"
+import { PortfolioChart } from "../../charts/portfolion-chart.jsx";
+import { PortfolioChartNew} from "../../charts/portfoliochartNew.jsx";
 import "./portfolio_ui.css";
 
 const TF_OPTS = ["1D", "1W", "1M", "1Y", "ALL"];
@@ -118,7 +120,17 @@ export default function Portfolio() {
 
           <section className="card donut">
             <div className="card__title">Allocation</div>
-            <AllocationDonut data={allocation} />
+            {/* <AllocationDonut data={allocation} /> */}
+            {/* <PortfolioChart /> */}
+            <PortfolioChartNew
+                allocations={[
+                  { label: "Tech", value: 42, color: "#7c3aed" },   // purple
+                  { label: "Consumer", value: 18, color: "#ec4899" }, // pink
+                  { label: "Energy", value: 12, color: "#22d3ee" },   // cyan
+                  { label: "Healthcare", value: 15, color: "#34d399" }, // green
+                  { label: "Cash", value: 13, color: "#f59e0b" },      // amber
+                ]}
+              />
             <ul className="legend">
               {allocation.map(a => (
                 <li key={a.label}><span style={{ background: a.color }} />{a.label} — {a.value}%</li>

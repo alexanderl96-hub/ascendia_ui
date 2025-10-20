@@ -181,7 +181,7 @@ a { color: inherit; text-decoration: none; }
   grid-template-columns: 1.7fr 1fr;
 }
 
-.chartcard{ padding:18px; display:flex; flex-direction:column; gap:14px; }
+.chartcard{ padding:18px; display:flex; flex-direction:column; gap:14px;}
 .chartcard__head{ display:flex; align-items:center; justify-content:space-between; }
 .chartcard__head h3{ margin:0; font-size:18px; }
 
