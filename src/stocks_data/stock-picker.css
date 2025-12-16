@@ -1,6 +1,5 @@
 :root{
   --bg: #0b0716;
-    /* --bg: #0c0a12; */
   --card: rgba(255,255,255,.06);
   --card2: rgba(255,255,255,.08);
   --stroke: rgba(255,255,255,.10);
@@ -14,7 +13,7 @@
 .sp__page{
   min-height: 100vh;
   background:
-    radial-gradient(1200px 700px at 50% -200px, #2a1a50 0%, transparent 60%),
+    radial-gradient(1200px 700px at 50% -200px, #300789 0%, transparent 60%),
     var(--bg);
   color: var(--text);
   display: flex;
@@ -191,6 +190,7 @@
   object-fit:cover;
   flex: 0 0 18px;
   margin-top: -5px;
+  
 }
 
 .sp__name{
