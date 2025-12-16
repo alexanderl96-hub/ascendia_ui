@@ -5,3 +5,13 @@ export function formatNumber(num) {
     maximumFractionDigits: 2,
   }).format(num);
 }
+
+export function scrollToTopAndStart({ setOpenType, delay = 150 } = {}) {
+  if (typeof window === "undefined") return;
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  setTimeout(() => {
+    if (typeof setOpenType === "function") setOpenType(true);
+  }, delay);
+}
