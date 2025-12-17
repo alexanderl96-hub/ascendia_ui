@@ -1,5 +1,6 @@
+
+
 // import { useEffect, useRef, useState } from "react";
-// import { Link, useNavigate } from "react-router-dom";
 // import "./signup-modal.css";
 
 // export default function SignupModal({
@@ -10,15 +11,20 @@
 //   onSignIn,
 //   onSubmit,
 //   loading = false,
+//   rolesType,
 //   error = "",
 // }) {
 //   const cardRef = useRef(null);
+//   const [openRoles, setOpenRoles] = useState(false)
 
 //   const [form, setForm] = useState({
 //     fullName: "",
+//     username: "",
 //     email: "",
+//     phone: "",              // ✅ added
 //     password: "",
 //     confirmPassword: "",
+//     roles: rolesType,
 //     agree: false,
 //   });
 
@@ -53,15 +59,49 @@
 
 //   const handleSubmit = (e) => {
 //     e.preventDefault();
-//     onSubmit?.(form);
+
+//     console.log({
+//       fullName: form.fullName.trim(),
+//       username: form.username.trim(),
+//       email: form.email.trim(),
+//       phone: form.phone.trim(),
+//       password: form.password,
+//       roles: form.roles,
+//       agree: form.agree,
+//     })
+
+//     if(form.roles !== "" ){
+
+//       // ✅ send the full payload including phone
+//       onSubmit?.({
+//         fullName: form.fullName.trim(),
+//         username: form.username.trim(),
+//         email: form.email.trim(),
+//         phone: form.phone.trim(),
+//         password: form.password,
+//       //   confirmPassword: form.confirmPassword,
+//         roles: form.roles,
+//         agree: form.agree === "agree" ? true : false,
+//       });
+
+//     }else{
+//       setOpenRoles(true);
+//     }
+
+
 //   };
 
 //   const pwdMismatch =
 //     form.password && form.confirmPassword && form.password !== form.confirmPassword;
 
+//   // (optional) basic phone presence validation (you can make it stricter later)
+//   const phoneOk = form.phone.trim().length >= 7;
+
 //   const canSubmit =
 //     form.fullName.trim().length > 0 &&
+//     form.username.trim().length > 0 &&
 //     form.email.trim().length > 0 &&
+//     phoneOk &&                         // ✅ added
 //     form.password.length >= 8 &&
 //     !pwdMismatch &&
 //     form.agree;
@@ -115,6 +155,20 @@
 //               />
 //             </div>
 
+//             <label className="sm__label">Username</label>
+//             <div className="sm__inputWrap">
+//               <span className="sm__icon" aria-hidden="true">@</span>
+//               <input
+//                 className="sm__input"
+//                 type="text"
+//                 placeholder="john.doe"
+//                 value={form.username}
+//                 onChange={setField("username")}
+//                 autoComplete="username"
+//                 required
+//               />
+//             </div>
+
 //             <label className="sm__label sm__labelTop">Email</label>
 //             <div className="sm__inputWrap">
 //               <span className="sm__icon" aria-hidden="true">✉</span>
@@ -128,6 +182,26 @@
 //                 required
 //               />
 //             </div>
+
+//             {/* ✅ Phone */}
+//             <label className="sm__label sm__labelTop">Phone Number</label>
+//             <div className="sm__inputWrap">
+//               <span className="sm__icon" aria-hidden="true">📞</span>
+//               <input
+//                 className="sm__input"
+//                 type="tel"
+//                 name="phone"                 // ✅ IMPORTANT
+//                 placeholder="(555) 123-4567"
+//                 value={form.phone}
+//                 onChange={setField("phone")}
+//                 autoComplete="tel"
+//                 inputMode="tel"
+//                 required
+//               />
+//             </div>
+//             {!phoneOk && form.phone.length > 0 ? (
+//               <div className="sm__hint">Please enter a valid phone number.</div>
+//             ) : null}
 
 //             <label className="sm__label sm__labelTop">Password</label>
 //             <div className="sm__inputWrap">
@@ -158,8 +232,9 @@
 //               />
 //             </div>
 
-//             {pwdMismatch ? <div className="sm__error">Passwords do not match.</div> : null}
-//             {error ? <div className="sm__error">{error}</div> : null}
+//                 {pwdMismatch ? <div className="sm__error">Passwords do not match.</div> : null}
+//                 {error ? <div className="sm__error">{error}</div> : null}
+
 
 //             <label className="sm__agree">
 //               <input
@@ -178,6 +253,14 @@
 //                 </button>
 //               </span>
 //             </label>
+
+//             {/* ✅ Popover shows ABOVE button */}
+//             <AccountTypeModal
+//               open={openType}
+//               setRoles={setRoles}
+//               onClose={() => setOpenType(false)}
+//               onPick={handlePick}
+//             />
 
 //             <button type="submit" className="sm__submit" disabled={!canSubmit || loading}>
 //               {loading ? "Creating..." : "Create Account"}
@@ -202,7 +285,11 @@
 
 
 import { useEffect, useRef, useState } from "react";
+import AccountTypeModal from "../modal_account_type/account_type_modal";
 import "./signup-modal.css";
+
+// If AccountTypeModal is in another file, import it here:
+// import AccountTypeModal from "../modals/account_type/AccountTypeModal";
 
 export default function SignupModal({
   open,
@@ -214,19 +301,35 @@ export default function SignupModal({
   loading = false,
   rolesType,
   error = "",
+  setRoles
 }) {
   const cardRef = useRef(null);
+
+  // ✅ role picker open state
+  const [openRoles, setOpenRoles] = useState(false);
 
   const [form, setForm] = useState({
     fullName: "",
     username: "",
     email: "",
-    phone: "",              // ✅ added
+    phone: "",
     password: "",
     confirmPassword: "",
-    roles: rolesType,
-    agree: false,
+    roles: rolesType || "", // ✅ init from prop (fallback "")
+    agree: false,           // ✅ boolean
   });
+
+  // ✅ Keep roles in sync when rolesType changes (switch login -> signup, etc.)
+  useEffect(() => {
+    if (!open) return;
+    setForm((p) => ({ ...p, roles: rolesType || "" }));
+  }, [rolesType, open]);
+
+  // ✅ If signup opens and role isn't set, open role picker
+  useEffect(() => {
+    if (!open) return;
+    if (!rolesType) setOpenRoles(true);
+  }, [open, rolesType]);
 
   // ESC + click outside
   useEffect(() => {
@@ -257,9 +360,21 @@ export default function SignupModal({
       [k]: e.target.type === "checkbox" ? e.target.checked : e.target.value,
     }));
 
+  const handlePickRole = (pickedRole) => {
+    setForm((p) => ({ ...p, roles: pickedRole }));
+    setOpenRoles(false);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // ✅ enforce role selection
+    if (!form.roles) {
+      setOpenRoles(true);
+      return;
+    }
+
+    // ✅ optional debug
     console.log({
       fullName: form.fullName.trim(),
       username: form.username.trim(),
@@ -268,35 +383,33 @@ export default function SignupModal({
       password: form.password,
       roles: form.roles,
       agree: form.agree,
-    })
+    });
 
-    // ✅ send the full payload including phone
     onSubmit?.({
       fullName: form.fullName.trim(),
       username: form.username.trim(),
       email: form.email.trim(),
       phone: form.phone.trim(),
       password: form.password,
-    //   confirmPassword: form.confirmPassword,
       roles: form.roles,
-      agree: form.agree,
+      agree: !!form.agree, // ✅ boolean
     });
   };
 
   const pwdMismatch =
     form.password && form.confirmPassword && form.password !== form.confirmPassword;
 
-  // (optional) basic phone presence validation (you can make it stricter later)
   const phoneOk = form.phone.trim().length >= 7;
 
   const canSubmit =
     form.fullName.trim().length > 0 &&
     form.username.trim().length > 0 &&
     form.email.trim().length > 0 &&
-    phoneOk &&                         // ✅ added
+    phoneOk &&
     form.password.length >= 8 &&
     !pwdMismatch &&
-    form.agree;
+    form.agree &&
+    !!form.roles; // ✅ must have role too
 
   return (
     <div className="sm__overlay" role="dialog" aria-modal="true" aria-label="Sign up">
@@ -325,6 +438,15 @@ export default function SignupModal({
             <span className="sm__gIcon">G</span>
             Continue with Google
           </button>
+
+          <div className="sm__rolesAnchor">
+            <AccountTypeModal
+              open={openRoles}
+              onClose={() => setOpenRoles(false)}
+              onPick={handlePickRole}
+              setRoles={setRoles}
+            />
+          </div>
 
           <div className="sm__divider">
             <span className="sm__dividerLine" />
@@ -375,14 +497,13 @@ export default function SignupModal({
               />
             </div>
 
-            {/* ✅ Phone */}
             <label className="sm__label sm__labelTop">Phone Number</label>
             <div className="sm__inputWrap">
               <span className="sm__icon" aria-hidden="true">📞</span>
               <input
                 className="sm__input"
                 type="tel"
-                name="phone"                 // ✅ IMPORTANT
+                name="phone"
                 placeholder="(555) 123-4567"
                 value={form.phone}
                 onChange={setField("phone")}
@@ -424,16 +545,11 @@ export default function SignupModal({
               />
             </div>
 
-                {pwdMismatch ? <div className="sm__error">Passwords do not match.</div> : null}
-                {error ? <div className="sm__error">{error}</div> : null}
-
+            {pwdMismatch ? <div className="sm__error">Passwords do not match.</div> : null}
+            {error ? <div className="sm__error">{error}</div> : null}
 
             <label className="sm__agree">
-              <input
-                type="checkbox"
-                checked={form.agree}
-                onChange={setField("agree")}
-              />
+              <input type="checkbox" checked={form.agree} onChange={setField("agree")} />
               <span>
                 I agree to the{" "}
                 <button type="button" className="sm__linkInline">
@@ -466,3 +582,4 @@ export default function SignupModal({
     </div>
   );
 }
+

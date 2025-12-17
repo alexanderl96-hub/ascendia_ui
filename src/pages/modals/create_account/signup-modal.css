@@ -282,3 +282,10 @@
   font-size: 12px;
   margin-top: 2px;
 }
+
+.sm__rolesAnchor {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px; /* small spacing above divider */
+  z-index: 3;          /* above divider, below overlay */
+}

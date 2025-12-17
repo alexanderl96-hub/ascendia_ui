@@ -52,7 +52,7 @@ export default function AccountTypeModal({ open, onClose, onPick, setRoles }) {
         <button
           type="button"
           className="acct-popover__card"
-          onClick={() => {onPick("developer"); setRoles("DEVELOPER")}}
+          onClick={() => {onPick("DEVELOPER"); setRoles("DEVELOPER")}}
         >
           <div className="acct-popover__card-title">Developer</div>
           <div className="acct-popover__card-text">
@@ -64,7 +64,7 @@ export default function AccountTypeModal({ open, onClose, onPick, setRoles }) {
         <button
           type="button"
           className="acct-popover__card"
-          onClick={() => {onPick("investor"); setRoles("TRADING")}}
+          onClick={() => {onPick("TRADING"); setRoles("TRADING")}}
         >
           <div className="acct-popover__card-title">Trading</div>
           <div className="acct-popover__card-text">

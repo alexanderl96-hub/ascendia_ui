@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
-import { Routes, Route, useNavigate, useLocation, useSearchParams } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import "./App.css";
 // import { login, register } from "./lib/auth.jsx"
 import { useAuth } from "./pages/auth/authContext.jsx";
@@ -23,7 +23,6 @@ import DangerZone from "./pages/settings/danger_zone/Danger_Zone.jsx";
 import ConnectedAccounts from "./pages/settings/connected_accounts/ConnectedAccounts.jsx";
 import BillingSubscription from "./pages/settings/billing&subscription/BillingSubscription.jsx";
 import ApiKeys from "./pages/settings/apikeys/ApiKeys.jsx";
-import LoginModal from "./pages/modals/login_user/loginModal.jsx";
 import StockPicker from "./stocks_data/stock_picker.jsx";
 
 export default function App() {
@@ -63,7 +62,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingHero setRoles={setRoles} />} />
-      <Route path="/auth" element={<AuthRoute roles={roles} />} />
+      <Route path="/auth" element={<AuthRoute roles={roles} setRoles={setRoles} />} />
       <Route path="/stocks_picker" element={<StockPicker />} />
       <Route path="/dashboard" element={<Dashboard />} /> 
       <Route path="/markets" element={<Markets />} />
@@ -278,7 +277,7 @@ export default function App() {
 //   );
 // }
 
-function AuthRoute({roles}) {
+function AuthRoute({roles, setRoles}) {
   const { login } = useAuth();
   const nav = useNavigate();
   const loc = useLocation();
@@ -297,7 +296,7 @@ function AuthRoute({roles}) {
   const [open, setOpen] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [rolesType, setRolesType] = useState(roles)
+  const [rolesType] = useState(roles)
 
 
   // ✅ IMPORTANT: update tab whenever URL query changes
@@ -319,51 +318,6 @@ function AuthRoute({roles}) {
 
   // ------------------ LOGIN ------------------
   // NOTE: your LoginModal collects "email", so map email -> username for backend
-  // const handleLogin = async ({ email, password, remember }) => {
-  //   try {
-  //     setError("");
-  //     setLoading(true);
-
-  //     const res = await fetch("http://localhost:8080/api/v1/auth/login", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       credentials: "include",
-  //       body: JSON.stringify({ username: email, password }), // ✅ map
-  //     });
-
-  //     if (!res.ok) {
-  //       const errTxt = await safeText(res);
-  //       throw new Error(errTxt || `Login failed (${res.status})`);
-  //     }
-
-  //     const data = await safeJson(res);
-
-  //     let token = data?.accessToken ?? data?.token ?? null;
-  //     let userId = data?.userId ?? data?.user?.id ?? data?.id ?? null;
-  //     let apiUsername = data?.username ?? data?.user?.username ?? email;
-
-  //     if (!userId && token) {
-  //       try {
-  //         const [, payloadB64] = token.split(".");
-  //         const payload = JSON.parse(atob(payloadB64));
-  //         userId = payload?.sub || payload?.user_id || null;
-  //       } catch {}
-  //     }
-
-  //     if (!userId) throw new Error("User id missing in response.");
-
-  //     const accountNumber = await fetchPrimaryAccountNumber(token);
-
-
-  //     login({ userId, token, username: apiUsername, accountNumber });
-
-  //     nav("/dashboard");
-  //   } catch (e) {
-  //     setError(e.message || "Login failed");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const handleLogin = async ({ username, email, password, remember}) => {
     try {
@@ -407,10 +361,10 @@ function AuthRoute({roles}) {
       const accountNumber = await fetchPrimaryAccountNumber(token);
 
       login({ userId, token, username: apiUsername, accountNumber });
-      if(data.roles === "DEVELOPER"){
+      if(data.roles === "TRADING"){
         nav("/dashboard");
       }else{
-        nav("/stocks_picker");
+        nav("/developer");
       }
       // nav("/dashboard");
     } catch (e) {
@@ -430,7 +384,7 @@ function AuthRoute({roles}) {
   // ------------------ SIGNUP ------------------
   // Your SignupModal currently submits: fullName, email, password, confirmPassword, agree
   // So handle only what you actually collect (until you add username/phone fields)
-  const handleSignup = async ({ fullName, email, phone, password, roles }) => {
+  const handleSignup = async ({ fullName, email, username, phone, password, roles, agree }) => {
     try {
       setError("");
       setLoading(true);
@@ -443,9 +397,10 @@ function AuthRoute({roles}) {
           fullName,
           email,
           phone,
-          username: email, // ✅ temporary mapping; replace when you add a username field
+          username, // ✅ temporary mapping; replace when you add a username field
           password,
-          roles: rolesType
+          roles: rolesType || roles,
+          agree
         }),
       });
 
@@ -456,7 +411,7 @@ function AuthRoute({roles}) {
 
       const data = await safeJson(res);
 
-      console.log("check data")
+      console.log("check data", data)
 
       let token = data?.accessToken ?? data?.token ?? null;
       let userId = data?.userId ?? data?.user?.id ?? data?.id ?? null;
@@ -475,8 +430,13 @@ function AuthRoute({roles}) {
       const accountNumber = await fetchPrimaryAccountNumber(token);
       login({ userId, token, username: apiUsername, accountNumber });
       
+      if(data.roles === "TRADING"){
+        nav("/stocks_picker");
+      }else{
+        nav("/developer");
+      }
 
-      nav("/dashboard");
+      // nav("/dashboard");
     } catch (e) {
       // setError(e.message || "Signup failed");
       const msg = e?.message || "Login failed";
@@ -500,6 +460,7 @@ function AuthRoute({roles}) {
       onSignup={handleSignup}
       loading={loading}
       rolesType={rolesType}
+      setRoles={setRoles}
       error={error}
     />
   );
