@@ -80,63 +80,6 @@ button{ font: inherit; }
   color: var(--text);
 }
 
-/* .sp{
-  min-height: 100vh;
-  background:
-    radial-gradient(900px 600px at 12% 40%, #4707b729, transparent 55%),
-    radial-gradient(900px 600px at 92% 55%, #4707b724, transparent 55%),
-    var(--bg-set);
-  color: var(--text);
-} */
-
-
-/* 
-
-.topbar{
-  position: sticky;
-  top: 0;
-  z-index: 20;
-  background: rgba(255,255,255,0.70);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(17, 24, 39, 0.06);
-}
-
-.topbar__inner{
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 14px 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-}
-
-.brand{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.brand__dot{
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, var(--purple), #d946ef);
-  box-shadow: 0 6px 16px rgba(124,58,237,0.25);
-}
-.brand__name{
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: #5b21b6;
-}
-
-.topnav{
-  display: flex;
-  gap: 22px;
-  color: rgba(17, 24, 39, 0.65);
-  font-size: 14px;
-}
-.topnav a:hover{ color: rgba(17, 24, 39, 0.92); } */
-
 /* page */
 .page_setting{ padding: 28px 0 60px; }
 .container_setting{
@@ -270,9 +213,9 @@ button{ font: inherit; }
   margin-bottom: 10px;
   background:  var(--mode-ligthBG);
 }
-.themeRow input{ 
-    /* display: none; */
- }
+/* .themeRow input{ 
+    display: none;
+ } */
 .themeRow input[type="radio"]{
   accent-color: var(----bt-input-color); /* or any color */
 }

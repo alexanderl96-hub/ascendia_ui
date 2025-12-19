@@ -878,7 +878,7 @@ useEffect(() => {
 
             {/* Replace static order form with real OrderTicket */}
                 <OrderTicket
-                    defaultSymbol={chooseSymbol}
+                    defaultSymbol={chooseSymbol} 
                     submitUrl="http://localhost:8080/api/v1/orders"
                     userId={userId}
                     accountNumber={accountNumber}

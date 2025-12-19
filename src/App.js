@@ -581,11 +581,18 @@ function AuthRoute({ roles, setRoles }) {
       login({ userId, token, username: apiUsername, accountNumber, fullName, userEmail, roles,   cashBalance,
              totalEquity, typeRegister , userSubscriptionStatus: subscription, modeTheme: mode});
 
-      if (data.roles === "TRADING") {
-        nav("/dashboard");
-      } else {
-        nav("/developer_home");
-      }
+      // if (data.roles === "TRADING") {
+      //   nav("/dashboard");
+      // } else {
+      //   nav("/developer_home");
+      // }
+      const nextPath = data.roles === "TRADING" ? "/dashboard" : "/developer_home";
+
+      setTimeout(() => {
+        nav(nextPath);
+      }, 800);
+
+
     } catch (e) {
       const msg = e?.message || "Login failed";
       setError(msg);
@@ -637,7 +644,7 @@ function AuthRoute({ roles, setRoles }) {
       const mode = data?.modeTheme ?? data?.user?.modeTheme ?? null;
 
       let typeRegister; 
-       console.log(data)
+       console.log("data: ", data)
 
         if (data.roles === "TRADING" && subscription === "TRIAL") {
           typeRegister = { cashBalance, totalEquity, subscription};
@@ -660,13 +667,20 @@ function AuthRoute({ roles, setRoles }) {
 
       // ✅ FIXED: pass fullName (not "fullname")
       login({ userId, token, username: apiUsername, accountNumber, fullName: apiFullName, userEmail, roles: rolesType || roles,   cashBalance,
-             totalEquity, typeRegister, modeTheme: mode});
+             totalEquity, typeRegister, modeTheme: mode, userSubscriptionStatus: subscription,});
 
-      if (data.roles === "TRADING") {
-        nav("/stocks_picker");
-      } else {
-        nav("/developer_home");
-      }
+      // if (data.roles === "TRADING") {
+      //   nav("/stocks_picker");
+      // } else {
+      //   nav("/developer_home");
+      // }
+      const nextPath = data.roles === "TRADING" ? "/stocks_picker" : "/developer_home";
+
+      setTimeout(() => {
+        nav(nextPath);
+      }, 800);
+
+
     } catch (e) {
       const msg = e?.message || "Signup failed";
       setError(msg);

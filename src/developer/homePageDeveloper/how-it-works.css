@@ -19,6 +19,7 @@
 html.theme-dark{
     /* --bg-dev: #190825;  */
     --text-dev: #fdfdff;
+    --card-dev: #0f172a;
     --border-dev: #0f172a;
     --muted-dev: #ceced2;
     --muted-dev-2: #373a42;
@@ -52,6 +53,7 @@ body{
 .topbar_dev{
   position: sticky;
   top: 0;
+  z-index: 9999;
   background: var(--bg-dev); 
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border-dev);
@@ -102,7 +104,9 @@ body{
   display: flex;
   align-items: center;
   gap: 10px;
-  z-index: 100000;
+  /* z-index: 100000; */
+  z-index: 10000;
+  cursor: pointer;
 }
 .user__avatar{
   width: 34px;
@@ -121,7 +125,7 @@ body{
 
 /* Main section */
 .how{
-  padding: 56px 0 80px; 
+  padding: 56px 0 80px;  z-index: 10001;
 }
 .how__inner{
   max-width: 1120px;
@@ -289,11 +293,13 @@ body{
   right: 4vw;
   top: 64px;
   width: 260px;
-  background: var(--card);
+  background: var(--card-dev);
   border: 1px solid var(--border);
   border-radius: 12px;
   box-shadow: var(--shadow);
   overflow: hidden;
+  cursor: pointer;
+  /* z-index: 100000; */
 }
 .menu__head{
   display: flex;
@@ -301,6 +307,7 @@ body{
   gap: 10px;
   padding: 12px 12px 10px;
   border-bottom: 1px solid var(--br-bt);
+  /* cursor: pointer; */
 }
 .menu__name{ font-weight: 700; font-size: 14px;  }
 .menu__email{ font-size: 12px; color: var(--muted-dev); }
@@ -313,7 +320,7 @@ body{
   display: flex;
   align-items: center;
   gap: 10px;
-  cursor: pointer;
+  /* cursor: pointer; */
   color: rgba(17,24,39,0.85);
   color: var(--text-dev)
 }

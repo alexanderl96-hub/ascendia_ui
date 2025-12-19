@@ -242,6 +242,17 @@ export default function LoginModal({
     });
   };
 
+  // const canSubmit =
+  //   // form.fullName.trim().length > 0 &&
+  //   form.username.trim().length > 0 &&
+  //   // form.email.trim().length > 0 &&
+  //   // phoneOk &&
+  //   form.password.length >= 8 ;
+  //   // &&
+  //   // !pwdMismatch &&
+  //   // form.agree &&
+  //   // !!form.roles;
+
   return (
     <div className="lm__overlay" role="dialog" aria-modal="true" aria-label="Login">
       <div className="lm__bg" />
@@ -322,8 +333,7 @@ export default function LoginModal({
             </div>
 
             {error ? <div className="lm__error">{error}</div> : null}
-
-            <button type="submit" className="lm__submit" disabled={loading}>
+            <button type="submit" className="lm__submit" disabled={ loading}> 
               {loading ? "Signing in..." : "Sign In"}
             </button>
           </form>
@@ -331,7 +341,7 @@ export default function LoginModal({
           <div className="lm__bottom">
             <span className="lm__muted">Don&apos;t have an account?</span>{" "}
             <button type="button" className="lm__link lm__linkStrong" onClick={onSignup}>
-              Sign up
+               Sign up
             </button>
           </div>
         </div>
