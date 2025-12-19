@@ -24,6 +24,8 @@ import ConnectedAccounts from "./pages/settings/connected_accounts/ConnectedAcco
 import BillingSubscription from "./pages/settings/billing&subscription/BillingSubscription.jsx";
 import ApiKeys from "./pages/settings/apikeys/ApiKeys.jsx";
 import StockPicker from "./stocks_data/stock_picker.jsx";
+import HowItWorksPage from "./developer/homePageDeveloper/HowItWorksPage.jsx";
+import SettingsDeveloper from "./developer/settingsDeveloper/settingsDeveloper.jsx";
 
 export default function App() {
   const navigate = useNavigate();
@@ -61,7 +63,7 @@ export default function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<LandingHero setRoles={setRoles} />} />
+      <Route path="/" element={<LandingHero setRoles={setRoles} roles={roles} />} />
       <Route path="/auth" element={<AuthRoute roles={roles} setRoles={setRoles} />} />
       <Route path="/stocks_picker" element={<StockPicker />} />
       <Route path="/dashboard" element={<Dashboard />} /> 
@@ -81,6 +83,8 @@ export default function App() {
       <Route path="/settings/billing" element={<BillingSubscription />} />
       <Route path="/settings/api-keys" element={<ApiKeys />} />
       {/* add more routes as needed */}
+      <Route path="/developer_home" element={<HowItWorksPage />} />
+      <Route path="/developer_home/settings" element={<SettingsDeveloper />} />
     </Routes>
   );
 }
@@ -277,7 +281,201 @@ export default function App() {
 //   );
 // }
 
-function AuthRoute({roles, setRoles}) {
+// function AuthRoute({roles, setRoles}) {
+//   const { login } = useAuth();
+//   const nav = useNavigate();
+//   const loc = useLocation();
+
+//   // normalize next: "login" | "register" (accepts "/login" "/register" too)
+//   const params = new URLSearchParams(loc.search);
+//   const nextRaw = params.get("next") || "login";
+//   const next = nextRaw.replace("/", "");
+
+//   const derivedTab = useMemo(
+//     () => (next === "register" ? "signup" : "login"),
+//     [next]
+//   );
+
+//   const [tab, setTab] = useState(derivedTab);
+//   const [open, setOpen] = useState(true);
+//   const [loading, setLoading] = useState(false);
+//   const [error, setError] = useState("");
+//   const [rolesType] = useState(roles)
+
+
+//   // ✅ IMPORTANT: update tab whenever URL query changes
+//   useEffect(() => {
+//     setTab(derivedTab);
+//   }, [derivedTab]);
+
+//   const handleClose = () => {
+//     setOpen(false);
+//     nav("/");
+//   };
+
+//   // ✅ single source of truth: switch tab + update URL
+//   const switchTab = (newTab) => {
+//     setTab(newTab);
+//     const q = newTab === "signup" ? "register" : "login";
+//     nav(`/auth?next=${q}`, { replace: true });
+//   };
+
+//   // ------------------ LOGIN ------------------
+//   // NOTE: your LoginModal collects "email", so map email -> username for backend
+
+//   const handleLogin = async ({ username, email, password, remember}) => {
+//     try {
+//       setError("");
+//       setLoading(true);
+
+//       const u = (username ?? email ?? "").toString().trim(); // ✅ handles both payload styles
+
+//       console.log("LOGIN payload =>", { username: u, passwordLen: password?.length });
+
+//       const res = await fetch("http://localhost:8080/api/v1/auth/login", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         credentials: "include",
+//         body: JSON.stringify({ username: u, password }),
+//       });
+
+//       if (!res.ok) {
+//         const errTxt = await safeText(res);
+//         throw new Error(errTxt || `Login failed (${res.status})`);
+//       }
+
+//       const data = await safeJson(res);
+
+//       console.log("check data ", data)
+
+//       let token = data?.accessToken ?? data?.token ?? null;
+//       let userId = data?.userId ?? data?.user?.id ?? data?.id ?? null;
+//       let apiUsername = data?.username ?? data?.user?.username ?? u;
+//       let fullname = data?.fullName ?? data?.user?.fullName ?? null
+//       let userEmail = data?.email ?? data?.user?.email ?? null
+//       // let cashBalance
+
+//       if (!userId && token) {
+//         try {
+//           const [, payloadB64] = token.split(".");
+//           const payload = JSON.parse(atob(payloadB64));
+//           userId = payload?.sub || payload?.user_id || null;
+//         } catch {}
+//       }
+
+//       if (!userId) throw new Error("User id missing in response.");
+
+//       const accountNumber = await fetchPrimaryAccountNumber(token);
+
+//       login({ userId, token, username: apiUsername, accountNumber , fullname, userEmail});
+//       if(data.roles === "TRADING"){
+//         nav("/dashboard");
+//       }else{
+//         nav("/developer_home");
+//       }
+//       // nav("/dashboard");
+//     } catch (e) {
+//       // setError(e.message || "Login failed");
+//       const msg = e?.message || "Login failed";
+//       setError(msg);
+
+//       setTimeout(() => {
+//         setError("");
+//       }, 5000);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+
+//   // ------------------ SIGNUP ------------------
+//   // Your SignupModal currently submits: fullName, email, password, confirmPassword, agree
+//   // So handle only what you actually collect (until you add username/phone fields)
+//   const handleSignup = async ({ fullName, email, username, phone, password, roles, agree }) => {
+//     try {
+//       setError("");
+//       setLoading(true);
+
+//       const res = await fetch("http://localhost:8080/api/v1/auth/register", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         credentials: "include",
+//         body: JSON.stringify({
+//           fullName,
+//           email,
+//           phone,
+//           username, // ✅ temporary mapping; replace when you add a username field
+//           password,
+//           roles: rolesType || roles,
+//           agree
+//         }),
+//       });
+
+//       if (!res.ok) {
+//         const errTxt = await safeText(res);
+//         throw new Error(errTxt || `Signup failed (${res.status})`);
+//       }
+
+//       const data = await safeJson(res);
+
+//       console.log("check data", data)
+
+//       let token = data?.accessToken ?? data?.token ?? null;
+//       let userId = data?.userId ?? data?.user?.id ?? data?.id ?? null;
+//       let apiUsername = data?.username ?? data?.user?.username ?? email;
+//       let fullname = data?.fullName ?? data?.user?.fullName ?? null
+//       let userEmail = data?.email ?? data?.user?.email ?? null
+
+//       if (!userId && token) {
+//         try {
+//           const [, payloadB64] = token.split(".");
+//           const payload = JSON.parse(atob(payloadB64));
+//           userId = payload?.sub || payload?.user_id || null;
+//         } catch {}
+//       }
+
+//       if (!userId) throw new Error("User id missing in response.");
+
+//       const accountNumber = await fetchPrimaryAccountNumber(token);
+//       login({ userId, token, username: apiUsername, accountNumber, fullname, userEmail });
+      
+//       if(data.roles === "TRADING"){
+//         nav("/stocks_picker");
+//       }else{
+//         nav("/developer_home");
+//       }
+
+//       // nav("/dashboard");
+//     } catch (e) {
+//       // setError(e.message || "Signup failed");
+//       const msg = e?.message || "Login failed";
+//       setError(msg);
+
+//       setTimeout(() => {
+//         setError("");
+//       }, 5000);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <AuthModal
+//       open={open}
+//       onClose={handleClose}
+//       tab={tab}
+//       onTabChange={switchTab}   // ✅ pass switching function
+//       onLogin={handleLogin}
+//       onSignup={handleSignup}
+//       loading={loading}
+//       rolesType={rolesType}
+//       setRoles={setRoles}
+//       error={error}
+//     />
+//   );
+// }
+
+function AuthRoute({ roles, setRoles }) {
   const { login } = useAuth();
   const nav = useNavigate();
   const loc = useLocation();
@@ -296,10 +494,8 @@ function AuthRoute({roles, setRoles}) {
   const [open, setOpen] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [rolesType] = useState(roles)
+  const [rolesType] = useState(roles);
 
-
-  // ✅ IMPORTANT: update tab whenever URL query changes
   useEffect(() => {
     setTab(derivedTab);
   }, [derivedTab]);
@@ -309,24 +505,25 @@ function AuthRoute({roles, setRoles}) {
     nav("/");
   };
 
-  // ✅ single source of truth: switch tab + update URL
   const switchTab = (newTab) => {
     setTab(newTab);
     const q = newTab === "signup" ? "register" : "login";
     nav(`/auth?next=${q}`, { replace: true });
   };
 
-  // ------------------ LOGIN ------------------
-  // NOTE: your LoginModal collects "email", so map email -> username for backend
+  // Replace with your real function
+  // const fetchPrimaryAccountNumber = async (token) => {
+  //   // TODO: call backend with token
+  //   return null;
+  // };
 
-  const handleLogin = async ({ username, email, password, remember}) => {
+  // ------------------ LOGIN ------------------
+  const handleLogin = async ({ username, email, password }) => {
     try {
       setError("");
       setLoading(true);
 
-      const u = (username ?? email ?? "").toString().trim(); // ✅ handles both payload styles
-
-      console.log("LOGIN payload =>", { username: u, passwordLen: password?.length });
+      const u = (username ?? email ?? "").toString().trim();
 
       const res = await fetch("http://localhost:8080/api/v1/auth/login", {
         method: "POST",
@@ -342,11 +539,22 @@ function AuthRoute({roles, setRoles}) {
 
       const data = await safeJson(res);
 
-      console.log("check data ", data)
-
-      let token = data?.accessToken ?? data?.token ?? null;
+      const token = data?.accessToken ?? data?.token ?? null;
       let userId = data?.userId ?? data?.user?.id ?? data?.id ?? null;
-      let apiUsername = data?.username ?? data?.user?.username ?? u;
+      const apiUsername = data?.username ?? data?.user?.username ?? u;
+
+      // ✅ IMPORTANT: use fullName (camelCase) and userEmail keys
+      const fullName = data?.fullName ?? data?.user?.fullName ?? null;
+      const userEmail = data?.email ?? data?.user?.email ?? null;
+
+      const alpaca = data?.alpaca ?? data?.user?.alpaca ?? null;
+      const cashBalance = data?.cashBalance ?? data?.user?.cashBalance ?? null;
+      const totalEquity = data?.totalEquity ?? data?.user?.totalEquity ?? null;
+      const subscription = data?.userSubscriptionStatus ?? data?.user?.userSubscriptionStatus ?? null;
+      const mode = data?.modeTheme ?? data?.user?.modeTheme ?? null;
+
+      let typeRegister; 
+      console.log(data)
 
       if (!userId && token) {
         try {
@@ -360,30 +568,34 @@ function AuthRoute({roles, setRoles}) {
 
       const accountNumber = await fetchPrimaryAccountNumber(token);
 
-      login({ userId, token, username: apiUsername, accountNumber });
-      if(data.roles === "TRADING"){
+      if (data.roles === "TRADING" && subscription === "TRIAL") {
+          typeRegister = { cashBalance, totalEquity, subscription};
+        } else if (data.roles === "TRADING" && subscription !== "TRIAL") {
+          // only use alpaca when status is actually known and not TRIAL
+          typeRegister = alpaca ;
+        } else {
+          typeRegister = { subscription};
+        }
+
+      // ✅ FIXED: pass fullName (not "fullname")
+      login({ userId, token, username: apiUsername, accountNumber, fullName, userEmail, roles,   cashBalance,
+             totalEquity, typeRegister , userSubscriptionStatus: subscription, modeTheme: mode});
+
+      if (data.roles === "TRADING") {
         nav("/dashboard");
-      }else{
-        nav("/developer");
+      } else {
+        nav("/developer_home");
       }
-      // nav("/dashboard");
     } catch (e) {
-      // setError(e.message || "Login failed");
       const msg = e?.message || "Login failed";
       setError(msg);
-
-      setTimeout(() => {
-        setError("");
-      }, 5000);
+      setTimeout(() => setError(""), 5000);
     } finally {
       setLoading(false);
     }
   };
 
-
   // ------------------ SIGNUP ------------------
-  // Your SignupModal currently submits: fullName, email, password, confirmPassword, agree
-  // So handle only what you actually collect (until you add username/phone fields)
   const handleSignup = async ({ fullName, email, username, phone, password, roles, agree }) => {
     try {
       setError("");
@@ -397,10 +609,10 @@ function AuthRoute({roles, setRoles}) {
           fullName,
           email,
           phone,
-          username, // ✅ temporary mapping; replace when you add a username field
+          username,
           password,
           roles: rolesType || roles,
-          agree
+          agree,
         }),
       });
 
@@ -411,11 +623,28 @@ function AuthRoute({roles, setRoles}) {
 
       const data = await safeJson(res);
 
-      console.log("check data", data)
-
-      let token = data?.accessToken ?? data?.token ?? null;
+      const token = data?.accessToken ?? data?.token ?? null;
       let userId = data?.userId ?? data?.user?.id ?? data?.id ?? null;
-      let apiUsername = data?.username ?? data?.user?.username ?? email;
+      const apiUsername = data?.username ?? data?.user?.username ?? email;
+
+      // ✅ IMPORTANT: ensure correct keys
+      const apiFullName = data?.fullName ?? data?.user?.fullName ?? fullName ?? null;
+      const userEmail = data?.email ?? data?.user?.email ?? email ?? null;
+      const cashBalance = data?.cashBalance ?? data?.user?.cashBalance ?? null;
+      const totalEquity = data?.totalEquity ?? data?.user?.totalEquity ?? null;
+
+      const subscription = data?.userSubscriptionStatus ?? data?.user?.userSubscriptionStatus ?? null;
+      const mode = data?.modeTheme ?? data?.user?.modeTheme ?? null;
+
+      let typeRegister; 
+       console.log(data)
+
+        if (data.roles === "TRADING" && subscription === "TRIAL") {
+          typeRegister = { cashBalance, totalEquity, subscription};
+        }  else {
+          typeRegister = { subscription};
+        }
+
 
       if (!userId && token) {
         try {
@@ -428,23 +657,20 @@ function AuthRoute({roles, setRoles}) {
       if (!userId) throw new Error("User id missing in response.");
 
       const accountNumber = await fetchPrimaryAccountNumber(token);
-      login({ userId, token, username: apiUsername, accountNumber });
-      
-      if(data.roles === "TRADING"){
+
+      // ✅ FIXED: pass fullName (not "fullname")
+      login({ userId, token, username: apiUsername, accountNumber, fullName: apiFullName, userEmail, roles: rolesType || roles,   cashBalance,
+             totalEquity, typeRegister, modeTheme: mode});
+
+      if (data.roles === "TRADING") {
         nav("/stocks_picker");
-      }else{
-        nav("/developer");
+      } else {
+        nav("/developer_home");
       }
-
-      // nav("/dashboard");
     } catch (e) {
-      // setError(e.message || "Signup failed");
-      const msg = e?.message || "Login failed";
+      const msg = e?.message || "Signup failed";
       setError(msg);
-
-      setTimeout(() => {
-        setError("");
-      }, 5000);
+      setTimeout(() => setError(""), 5000);
     } finally {
       setLoading(false);
     }
@@ -455,7 +681,7 @@ function AuthRoute({roles, setRoles}) {
       open={open}
       onClose={handleClose}
       tab={tab}
-      onTabChange={switchTab}   // ✅ pass switching function
+      onTabChange={switchTab}
       onLogin={handleLogin}
       onSignup={handleSignup}
       loading={loading}

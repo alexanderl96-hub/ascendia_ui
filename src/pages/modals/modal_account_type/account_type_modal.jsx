@@ -53,6 +53,7 @@ export default function AccountTypeModal({ open, onClose, onPick, setRoles }) {
           type="button"
           className="acct-popover__card"
           onClick={() => {onPick("DEVELOPER"); setRoles("DEVELOPER")}}
+          
         >
           <div className="acct-popover__card-title">Developer</div>
           <div className="acct-popover__card-text">

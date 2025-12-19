@@ -21,7 +21,7 @@ function Toggle({ checked, onChange, label }) {
 }
 
 export default function Settings() {
-  const { userId , username, accountNumber, safeFetch, buyingPower, equity, portfolioValue } = useAuth() 
+  const { userId , username, accountNumber, safeFetch, buyingPower, userEmail, fullName, equity, portfolioValue } = useAuth() 
       
 
   // Mock state
@@ -109,7 +109,7 @@ export default function Settings() {
               <label className="field">
                 <span>Profile</span>
                 <input
-                  value={profile.handle}
+                  value={fullName}
                   onChange={update("handle")}
                   placeholder="handle"
                 />
@@ -120,7 +120,7 @@ export default function Settings() {
               <label className="field">
                 <span>Username</span>
                 <input
-                  value={profile.name}
+                  value={username}
                   onChange={update("name")}
                   placeholder="John Doe"
                 />
@@ -132,7 +132,7 @@ export default function Settings() {
                 <span>Email address</span>
                 <input
                   type="email"
-                  value={profile.email}
+                  value={userEmail}
                   onChange={update("email")}
                   placeholder="you@example.com"
                 />

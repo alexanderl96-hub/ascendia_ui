@@ -55,7 +55,7 @@ a { color: inherit; text-decoration: none; }
   background: linear-gradient(135deg, var(--brand), var(--brand-2));
   font-weight:800; color:#fff;
 }
-.brand__name{ font-weight:700; letter-spacing:.2px; }
+.brand__name{ font-weight:700; letter-spacing:.2px; color:var(--text)}
 
 .topnav{ display:flex; gap:18px; margin-inline:auto; }
 .topnav__link{ color:var(--muted); padding:10px 6px; border-bottom:2px solid transparent; }

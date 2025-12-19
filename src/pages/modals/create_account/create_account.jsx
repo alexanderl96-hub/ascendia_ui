@@ -285,11 +285,10 @@
 
 
 import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import AccountTypeModal from "../modal_account_type/account_type_modal";
 import "./signup-modal.css";
-
-// If AccountTypeModal is in another file, import it here:
-// import AccountTypeModal from "../modals/account_type/AccountTypeModal";
 
 export default function SignupModal({
   open,
@@ -303,10 +302,190 @@ export default function SignupModal({
   error = "",
   setRoles
 }) {
-  const cardRef = useRef(null);
+  // const cardRef = useRef(null);
+  // const navigate = useNavigate();
+  // const location = useLocation();
+
+
+  // // ✅ role picker open state
+  // const [openRoles, setOpenRoles] = useState(false);
+
+  // const [form, setForm] = useState({
+  //   fullName: "",
+  //   username: "",
+  //   email: "",
+  //   phone: "",
+  //   password: "",
+  //   confirmPassword: "",
+  //   roles: rolesType || "", // ✅ init from prop (fallback "")
+  //   agree: false,           // ✅ boolean
+  // });
+
+  // // ✅ Keep roles in sync when rolesType changes (switch login -> signup, etc.)
+  // useEffect(() => {
+  //   if (!open) return;
+  //   setForm((p) => ({ ...p, roles: rolesType || "" }));
+  // }, [rolesType, open]);
+
+  // // ✅ If signup opens and role isn't set, open role picker
+  // useEffect(() => {
+  //   if (!open) return;
+  //   if (!rolesType) setOpenRoles(true);
+  // }, [open, rolesType]);
+
+  // // ESC + click outside
+  // useEffect(() => {
+  //   if (!open) return;
+
+  //   const onKeyDown = (e) => {
+  //     if (e.key === "Escape") onClose?.();
+  //   };
+
+  //   const onMouseDown = (e) => {
+  //     if (!cardRef.current) return;
+  //     if (!cardRef.current.contains(e.target)) onClose?.();
+  //   };
+
+  //   window.addEventListener("keydown", onKeyDown);
+  //   document.addEventListener("mousedown", onMouseDown);
+  //   return () => {
+  //     window.removeEventListener("keydown", onKeyDown);
+  //     document.removeEventListener("mousedown", onMouseDown);
+  //   };
+  // }, [open, onClose]);
+
+  // useEffect(() => {
+  //   if (!open) return;
+
+  //   const h = (location.hash || "").replace("#", "").toLowerCase();
+
+  //   const roleFromHash =
+  //     h === "developer" ? "DEVELOPER"
+  //     : h === "trading" ? "TRADING"
+  //     : "";
+
+  //   if (roleFromHash) {
+  //     setForm((p) => ({ ...p, roles: roleFromHash }));
+  //     setOpenRoles(false);
+  //   }
+  // }, [open, location.hash]);
+
+
+  // const setHash = (hash) => {
+  //   // navigate(
+  //   //   { pathname: location.pathname, search: location.search, hash}, // hash WITHOUT '#'
+  //   //   { replace: true } // don't spam browser history
+  //   // );
+  //    navigate(`/auth?next=/register${hash ? `#${hash}` : ""}`, { replace: true });
+  // };
+
+  // const roleFromHash = (hash) => {
+  //   const h = (hash || "").replace("#", "").toLowerCase();
+  //   if (h === "developer") return "DEVELOPER";
+  //   if (h === "trading") return "TRADING";
+  //   return "";
+  // };
+
+
+  // if (!open) return null;
+
+  // const setField = (k) => (e) =>
+  //   setForm((p) => ({
+  //     ...p,
+  //     [k]: e.target.type === "checkbox" ? e.target.checked : e.target.value,
+  //   }));
+
+  // // const handlePickRole = (pickedRole) => {
+  // //   setForm((p) => ({ ...p, roles: pickedRole }));
+  // //   setOpenRoles(false);
+  // // };
+  // const handlePickRole = (pickedRole) => {
+  //   setForm((p) => ({ ...p, roles: pickedRole }));
+  //   setOpenRoles(false);
+  //   setRoles?.(pickedRole);
+
+  //   const hash =
+  //     pickedRole === "DEVELOPER" ? "developer"
+  //     : pickedRole === "TRADING" ? "trading"
+  //     : "";
+
+  //   setHash(hash);
+  // };
+
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   // ✅ enforce role selection
+  //   if (!form.roles) {
+  //     setOpenRoles(true);
+  //     return;
+  //   }
+
+  //   // ✅ optional debug
+  //   console.log({
+  //     fullName: form.fullName.trim(),
+  //     username: form.username.trim(),
+  //     email: form.email.trim(),
+  //     phone: form.phone.trim(),
+  //     password: form.password,
+  //     roles: form.roles,
+  //     agree: form.agree,
+  //   });
+
+  //   onSubmit?.({
+  //     fullName: form.fullName.trim(),
+  //     username: form.username.trim(),
+  //     email: form.email.trim(),
+  //     phone: form.phone.trim(),
+  //     password: form.password,
+  //     roles: form.roles,
+  //     agree: !!form.agree, // ✅ boolean
+  //   });
+  // };
+
+  // const pwdMismatch =
+  //   form.password && form.confirmPassword && form.password !== form.confirmPassword;
+
+  // const phoneOk = form.phone.trim().length >= 7;
+
+  // const canSubmit =
+  //   form.fullName.trim().length > 0 &&
+  //   form.username.trim().length > 0 &&
+  //   form.email.trim().length > 0 &&
+  //   phoneOk &&
+  //   form.password.length >= 8 &&
+  //   !pwdMismatch &&
+  //   form.agree &&
+  //   !!form.roles; // ✅ must have role too
+
+
+   const cardRef = useRef(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // ✅ role picker open state
   const [openRoles, setOpenRoles] = useState(false);
+
+  // ✅ hash -> role
+  const roleFromHash = (hash) => {
+    const h = (hash || "").replace("#", "").toLowerCase();
+    if (h === "developer") return "DEVELOPER";
+    if (h === "trading") return "TRADING";
+    return "";
+  };
+
+  // ✅ role -> hash
+  const hashFromRole = (role) => {
+    if (role === "DEVELOPER") return "developer";
+    if (role === "TRADING") return "trading";
+    return "";
+  };
+
+  // ✅ force URL to always be /auth?next=/register + optional hash
+  const setHash = (hash) => {
+    navigate(`/auth?next=/register${hash ? `#${hash}` : ""}`, { replace: true });
+  };
 
   const [form, setForm] = useState({
     fullName: "",
@@ -315,21 +494,39 @@ export default function SignupModal({
     phone: "",
     password: "",
     confirmPassword: "",
-    roles: rolesType || "", // ✅ init from prop (fallback "")
-    agree: false,           // ✅ boolean
+    roles: "", // ✅ resolved on open from rolesType OR hash
+    agree: false,
   });
 
-  // ✅ Keep roles in sync when rolesType changes (switch login -> signup, etc.)
+  /**
+   * ✅ SINGLE source-of-truth sync (runs when modal opens)
+   * - If rolesType exists (coming from home page), use it AND write hash immediately
+   * - Else, if hash exists, use it
+   * - Else open role picker
+   */
   useEffect(() => {
     if (!open) return;
-    setForm((p) => ({ ...p, roles: rolesType || "" }));
-  }, [rolesType, open]);
 
-  // ✅ If signup opens and role isn't set, open role picker
-  useEffect(() => {
-    if (!open) return;
-    if (!rolesType) setOpenRoles(true);
-  }, [open, rolesType]);
+    const hashRole = roleFromHash(location.hash);
+    const resolvedRole = rolesType || hashRole || "";
+    const desiredHash = hashFromRole(resolvedRole);
+
+    // keep state in sync
+    setForm((p) => ({ ...p, roles: resolvedRole }));
+    setRoles?.(resolvedRole);
+
+    // open picker if no role at all
+    setOpenRoles(!resolvedRole);
+
+    // ✅ ensure URL shows hash immediately when landing on the modal
+    const currentHash = (location.hash || "").replace("#", "");
+    if (desiredHash && currentHash !== desiredHash) {
+      setHash(desiredHash);
+    }
+
+    // Optional: if you want to clear hash when no role
+    // if (!desiredHash && currentHash) setHash("");
+  }, [open, rolesType, location.hash]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ESC + click outside
   useEffect(() => {
@@ -363,6 +560,10 @@ export default function SignupModal({
   const handlePickRole = (pickedRole) => {
     setForm((p) => ({ ...p, roles: pickedRole }));
     setOpenRoles(false);
+    setRoles?.(pickedRole);
+
+    const hash = hashFromRole(pickedRole);
+    setHash(hash);
   };
 
   const handleSubmit = (e) => {
@@ -374,17 +575,6 @@ export default function SignupModal({
       return;
     }
 
-    // ✅ optional debug
-    console.log({
-      fullName: form.fullName.trim(),
-      username: form.username.trim(),
-      email: form.email.trim(),
-      phone: form.phone.trim(),
-      password: form.password,
-      roles: form.roles,
-      agree: form.agree,
-    });
-
     onSubmit?.({
       fullName: form.fullName.trim(),
       username: form.username.trim(),
@@ -392,12 +582,14 @@ export default function SignupModal({
       phone: form.phone.trim(),
       password: form.password,
       roles: form.roles,
-      agree: !!form.agree, // ✅ boolean
+      agree: !!form.agree,
     });
   };
 
   const pwdMismatch =
-    form.password && form.confirmPassword && form.password !== form.confirmPassword;
+    form.password &&
+    form.confirmPassword &&
+    form.password !== form.confirmPassword;
 
   const phoneOk = form.phone.trim().length >= 7;
 
@@ -409,7 +601,8 @@ export default function SignupModal({
     form.password.length >= 8 &&
     !pwdMismatch &&
     form.agree &&
-    !!form.roles; // ✅ must have role too
+    !!form.roles;
+
 
   return (
     <div className="sm__overlay" role="dialog" aria-modal="true" aria-label="Sign up">

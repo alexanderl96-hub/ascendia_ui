@@ -649,7 +649,7 @@ const RAW_GOOGL = `
 
 export default function Dashboard() {
     // DESTRUCTURING CHANGE: Get safeFetch along with the user details
-    const { userId , accountNumber, safeFetch, buyingPower, equity, portfolioValue } = useAuth() 
+    const { userId , accountNumber, safeFetch, buyingPower, equity, cashBalance, totalEquity,  alpaca, portfolioValue, userSubscriptionStatus, typeRegister } = useAuth() 
     
   // ---- Top 20 symbols (replace with your API) ----
   const [tops, setTops] = useState(() => [
@@ -678,29 +678,6 @@ const fullData = [parsed.dataCharts, ...parsed.rows];
   // rotation timer state
   const [pausedUntil, setPausedUntil] = useState(0);
   const index = useMemo(() => Math.max(0, tops.indexOf(selected)), [tops, selected]);
-
-//  function parseAALtoCandles(raw) {
-//   const lines = raw.split(/\r?\n/).filter(Boolean);
-//   const rows = lines.map((line, idx) => {
-//     const t = line.trim().split(/\s+/); // splits by tabs OR spaces
-//     const open  = parseFloat(t[2]);
-//     const high  = parseFloat(t[3]);
-//     const low   = parseFloat(t[4]);
-//     const close = parseFloat(t[5]);
-//     const ts    = t[8];                 // "2025-10-01 16:00:00-04"
-//     // label: use HH:MM from timestamp + index to avoid duplicates
-//     const label =
-//       ts?.includes(" ")
-//         ? ts.split(" ")[1].slice(0,5) + ` #${idx+1}`
-//         : `pt ${idx+1}`;
-//     return [label, low, open, close, high];
-//   });
-
-//   // OPTIONAL: sort by time if timestamps differ (yours are identical)
-//   // rows.sort((a,b)=> new Date(aTs) - new Date(bTs))
-
-//   return [["Day", "Low", "Open", "Close", "High"], ...rows];
-// } 
 
 function parseAALtoCandles(raw) {
   const lines = raw.trim().split(/\r?\n/).filter(Boolean);
@@ -791,24 +768,8 @@ function parseAALtoCandles(raw) {
     return +(equity - buyingPower).toFixed(2);
   }
 
-  const pnlTotal = pnll(portfolioValue, 100000);
+  const pnlTotal = pnll(typeRegister.portfolioValue, 100000);
 
-
-
-// const checkLength = (value) =>{
-//     if(value == "1D"){
-//       setChartValueLength(dataChart.slice(0, 11))
-//     }else if(value == "1W"){
-//        setChartValueLength(dataChart.slice(0, 21))
-//     }
-//     else if(value == "1M"){
-//       setChartValueLength(dataChart.slice(0, 36))
-//     }else if(value == "3M"){
-//       setChartValueLength(dataChart.slice(0, 41))
-//     }else{
-//       setChartValueLength(dataChart)
-//     }
-// }
 
 
 function checkLength(tf, opts = {}) {
@@ -855,7 +816,6 @@ useEffect(() => {
   checkLength("1D"); // or "1W" etc.
 }, []);
 
-console.log(chartValueLength)
 
   return (
     <div className="dash-shell">
@@ -905,15 +865,15 @@ console.log(chartValueLength)
           <section className="grid kpis">
             <div className="card kpi">
               <div className="kpi__label">Total Equity</div>
-              <div className="kpi__value">${formatNumber(equity)}</div>
+              <div className="kpi__value">${formatNumber(userSubscriptionStatus === "TRIAL" ? totalEquity : typeRegister.equity)}</div> 
             </div>
             <div className="card kpi kpi--green">
               <div className="kpi__label">Today's P&amp;L</div>
-              <div className="kpi__value">+${formatNumber(pnlTotal)}</div>
+              <div className="kpi__value">+${formatNumber(userSubscriptionStatus === "TRIAL" ? 0 : pnlTotal)}</div>
             </div>
             <div className="card kpi">
               <div className="kpi__label">Buying Power</div>
-              <div className="kpi__value">${formatNumber(buyingPower)}</div>
+              <div className="kpi__value">${formatNumber(userSubscriptionStatus === "TRIAL" ? cashBalance : typeRegister.buyingPower)}</div>
             </div>
 
             {/* Replace static order form with real OrderTicket */}

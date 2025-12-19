@@ -208,13 +208,14 @@
 
 import { useEffect, useState } from "react";
 import "./landing-hero.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import AccountTypeModal from "../modals/modal_account_type/account_type_modal";
 import { scrollToTopAndStart } from "../../helper/helper"
 
-export default function LandingHero({ setOpen, setPath, setRoles }) {
+export default function LandingHero({ setOpen, setPath, setRoles, roles }) {
   const [openType, setOpenType] = useState(false);
-  const navigate = useNavigate();
+   const navigate = useNavigate();
+  const location = useLocation();
 
   // Keep your existing "Get Started" behavior (Sign In modal / route)
   const handleGetStarted = () => {
